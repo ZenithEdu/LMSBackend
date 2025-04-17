@@ -1,7 +1,6 @@
-package com.MiniLms.LMSBackend.service.serviceImpl.registrationImpl;
+package com.MiniLms.LMSBackend.service.RegistrationService;
 
 import com.MiniLms.LMSBackend.model.UserType;
-import com.MiniLms.LMSBackend.service.IRegistrationService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 

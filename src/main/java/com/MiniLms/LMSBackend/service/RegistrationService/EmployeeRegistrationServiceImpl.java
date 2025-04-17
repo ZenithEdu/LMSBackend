@@ -1,4 +1,4 @@
-package com.MiniLms.LMSBackend.service.serviceImpl.registrationImpl;
+package com.MiniLms.LMSBackend.service.RegistrationService;
 
 import com.MiniLms.LMSBackend.dto.RequestDTO.EmployeeRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.EmployeeRegistrationResponseDTO;
@@ -7,7 +7,6 @@ import com.MiniLms.LMSBackend.dto.RequestDTO.UserRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.exceptions.UserAlreadyExistsException;
 import com.MiniLms.LMSBackend.model.EmployeeModel;
 import com.MiniLms.LMSBackend.repository.IEmployeeRepository;
-import com.MiniLms.LMSBackend.service.IRegistrationService;
 import com.MiniLms.LMSBackend.service.emailService.IResetPasswordFirstTimeEmailService;
 import com.MiniLms.LMSBackend.utils.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service("employeeRegistrationService")
 public class EmployeeRegistrationServiceImpl implements IRegistrationService {

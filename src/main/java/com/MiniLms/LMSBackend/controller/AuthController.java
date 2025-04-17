@@ -2,8 +2,8 @@ package com.MiniLms.LMSBackend.controller;
 
 import com.MiniLms.LMSBackend.dto.RequestDTO.UserLoginRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.UserLoginResponseDTO;
-import com.MiniLms.LMSBackend.security.JwtTokenProvider;
-import com.MiniLms.LMSBackend.security.UserPrincipal;
+import com.MiniLms.LMSBackend.service.securityService.JwtTokenProvider;
+import com.MiniLms.LMSBackend.service.securityService.UserPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

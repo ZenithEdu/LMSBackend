@@ -1,4 +1,4 @@
-package com.MiniLms.LMSBackend.service;
+package com.MiniLms.LMSBackend.service.RegistrationService;
 
 import com.MiniLms.LMSBackend.dto.ResponseDTO.UserRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.UserRegistrationRequestDTO;

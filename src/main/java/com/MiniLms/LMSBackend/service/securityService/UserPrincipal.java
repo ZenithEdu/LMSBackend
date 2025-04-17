@@ -1,18 +1,16 @@
-package com.MiniLms.LMSBackend.security;
+package com.MiniLms.LMSBackend.service.securityService;
 
 import com.MiniLms.LMSBackend.model.EmployeeModel;
 import com.MiniLms.LMSBackend.model.Role;
 import com.MiniLms.LMSBackend.model.StudentModel;
 import com.MiniLms.LMSBackend.model.UserType;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Data
 public class UserPrincipal implements UserDetails {

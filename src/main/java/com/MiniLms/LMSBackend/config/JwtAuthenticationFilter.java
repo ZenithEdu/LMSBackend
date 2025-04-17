@@ -1,7 +1,7 @@
 package com.MiniLms.LMSBackend.config;
 
-import com.MiniLms.LMSBackend.security.JwtTokenProvider;
-import com.MiniLms.LMSBackend.security.UserPrincipal;
+import com.MiniLms.LMSBackend.service.securityService.JwtTokenProvider;
+import com.MiniLms.LMSBackend.service.securityService.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
