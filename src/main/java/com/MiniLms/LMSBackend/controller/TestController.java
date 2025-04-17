@@ -4,9 +4,9 @@ import com.MiniLms.LMSBackend.dto.RequestDTO.EmployeeRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.StudentRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.EmployeeRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.StudentRegistrationResponseDTO;
+import com.MiniLms.LMSBackend.model.UserType;
 import com.MiniLms.LMSBackend.service.IRegistrationService;
 import com.MiniLms.LMSBackend.service.serviceImpl.registrationImpl.RegistrationServiceFactory;
-import com.MiniLms.LMSBackend.service.serviceImpl.registrationImpl.RegistrationType;
 import com.MiniLms.LMSBackend.service.serviceImpl.registrationImpl.StudentRegistrationServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,20 +32,20 @@ public class TestController {
 
     @PostMapping("/empReg")
     public ResponseEntity<?> postEmployee(@Valid @RequestBody EmployeeRegistrationRequestDTO employeeRegistrationRequestDto){
-        registrationService = registrationServiceFactory.getService(RegistrationType.EMPLOYEE);
+        registrationService = registrationServiceFactory.getService(UserType.EMPLOYEE);
         EmployeeRegistrationResponseDTO responseDTO = (EmployeeRegistrationResponseDTO) registrationService.register(employeeRegistrationRequestDto);
         return ResponseEntity.ok(responseDTO);
     }
     @PostMapping("/stuReg")
     public ResponseEntity<?> postStudent(@Valid @RequestBody StudentRegistrationRequestDTO studentRegistrationRequestDTO){
-        registrationService = registrationServiceFactory.getService(RegistrationType.STUDENT);
+        registrationService = registrationServiceFactory.getService(UserType.STUDENT);
         StudentRegistrationResponseDTO responseDTO = (StudentRegistrationResponseDTO) registrationService.register(studentRegistrationRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PostMapping("/bulk-register-students")
     public ResponseEntity<?> bulkRegisterStudents(@RequestBody @Valid List<StudentRegistrationRequestDTO> studentDtos) {
-        registrationService = registrationServiceFactory.getService(RegistrationType.STUDENT);
+        registrationService = registrationServiceFactory.getService(UserType.STUDENT);
         List<StudentRegistrationResponseDTO> resposeDtos = ((StudentRegistrationServiceImpl)registrationService).registerMultipleStudents(studentDtos);
         return ResponseEntity.ok(resposeDtos);
     }
