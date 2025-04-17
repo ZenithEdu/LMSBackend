@@ -35,11 +35,11 @@ public class WebSecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(
                 request -> request
-                    .requestMatchers("/empReg").permitAll()
-                    .requestMatchers("/stuReg").permitAll()
-                    .requestMatchers("/bulk-register-students").permitAll()
-                    .requestMatchers("/reset").permitAll()
-                    .requestMatchers("/login").permitAll()
+                    .requestMatchers(
+                        "/api/auth/login",
+                        "/api/auth/register/**",
+                        "/api/auth/reset"
+                    ).permitAll()
                     .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults());
