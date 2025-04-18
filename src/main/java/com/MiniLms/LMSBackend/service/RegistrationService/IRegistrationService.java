@@ -7,7 +7,4 @@ import java.util.UUID;
 
 public interface IRegistrationService {
     UserRegistrationResponseDTO register(UserRegistrationRequestDTO userRegistrationRequestDTO) throws RuntimeException;
-    default String generateResetToken(){
-        return UUID.randomUUID().toString();
-    }
 }

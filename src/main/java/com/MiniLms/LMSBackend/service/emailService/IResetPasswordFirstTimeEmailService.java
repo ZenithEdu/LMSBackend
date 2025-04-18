@@ -17,13 +17,5 @@ public interface IResetPasswordFirstTimeEmailService {
         
         
         This link will expire in 24 hours.""";
-
-
-    /*
-    * what does this function do
-    *
-    *
-    *
-    * */
     void sendResetEmail(String email,String tempPassword, String token);
 }

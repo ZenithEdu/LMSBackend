@@ -1,8 +1,8 @@
 package com.MiniLms.LMSBackend.service.PasswordResetService;
 
-import com.MiniLms.LMSBackend.dto.RequestDTO.ResetPasswordRequestDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.ResetPasswordResponseDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.PasswordResetRequestDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
 
 public interface IPasswordResetService {
-    ResetPasswordResponseDTO resetPassword(ResetPasswordRequestDTO requestDTO);
+    MessageResultResponseDTO resetPassword(PasswordResetRequestDTO requestDTO);
 }

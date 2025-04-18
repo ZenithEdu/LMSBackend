@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                     .requestMatchers(
                         "/api/auth/login",
                         "/api/auth/register/**",
-                        "/api/auth/reset"
+                        "/api/auth/reset/**"
                     ).permitAll()
                     .anyRequest().authenticated()
             )

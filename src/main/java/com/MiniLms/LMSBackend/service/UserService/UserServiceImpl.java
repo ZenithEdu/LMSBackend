@@ -1,0 +1,66 @@
+package com.MiniLms.LMSBackend.service.UserService;
+
+import com.MiniLms.LMSBackend.model.*;
+import com.MiniLms.LMSBackend.repository.IEmployeeRepository;
+import com.MiniLms.LMSBackend.repository.IStudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class UserServiceImpl implements IUserService{
+
+    private final IEmployeeRepository employeeRepository;
+    private final IStudentRepository studentRepository;
+
+    @Autowired
+    public UserServiceImpl(
+        IEmployeeRepository employeeRepository,
+        IStudentRepository studentRepository
+    ){
+        this.employeeRepository = employeeRepository;
+        this.studentRepository = studentRepository;
+    }
+
+    @Override
+    public boolean verifyEmail(String email) {
+        Optional<EmployeeModel> isEmployee = employeeRepository.findByEmail(email);
+        if(isEmployee.isPresent()){
+            return true;
+        }
+        Optional<StudentModel> isStudent = studentRepository.findByEmail(email);
+        if(isStudent.isPresent()){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean saveUser(UserModel userModel) {
+        Role role = userModel.getRole();
+        if(role.equals(Role.ADMIN) || role.equals(Role.MANAGER)){
+            EmployeeModel employeeModel = (EmployeeModel) userModel;
+            employeeRepository.save(employeeModel);
+            return true;
+        }else if(role.equals(Role.STUDENT)){
+            StudentModel studentModel = (StudentModel) userModel;
+            studentRepository.save(studentModel);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Optional<UserModel> findByMail(String email) {
+        Optional<EmployeeModel> isEmployee = employeeRepository.findByEmail(email);
+        if(isEmployee.isPresent()){
+            return Optional.of(isEmployee.get());
+        }
+        Optional<StudentModel> isStudent = studentRepository.findByEmail(email);
+        if(isStudent.isPresent()){
+           return Optional.of(isStudent.get());
+        }
+        return Optional.empty();
+    }
+}

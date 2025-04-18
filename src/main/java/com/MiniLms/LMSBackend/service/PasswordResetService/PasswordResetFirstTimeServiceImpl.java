@@ -1,9 +1,9 @@
 package com.MiniLms.LMSBackend.service.PasswordResetService;
 
-import com.MiniLms.LMSBackend.dto.RequestDTO.ResetPasswordRequestDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.ResetPasswordResponseDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.PasswordResetRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.ResetPasswordFirstTimeRequestDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
 import com.MiniLms.LMSBackend.exceptions.InvalidTokenException;
-import com.MiniLms.LMSBackend.exceptions.PasswordMismatchException;
 import com.MiniLms.LMSBackend.model.EmployeeModel;
 import com.MiniLms.LMSBackend.model.StudentModel;
 import com.MiniLms.LMSBackend.model.UserModel;
@@ -14,28 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Service
-public class PasswordResetServiceImpl implements IPasswordResetService{
-    private final IEmployeeRepository employeeRepository;
-    private final IStudentRepository studentRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+@Service("passwordResetFirstTimeService")
+public class PasswordResetFirstTimeServiceImpl extends PasswordServiceImpl implements IPasswordResetService{
 
     @Autowired
-    public PasswordResetServiceImpl(
-        IEmployeeRepository employeeRepository,
-        IStudentRepository studentRepository,
-        BCryptPasswordEncoder bCryptPasswordEncoder
-    ){
-        this.employeeRepository = employeeRepository;
-        this.studentRepository = studentRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public PasswordResetFirstTimeServiceImpl(IEmployeeRepository employeeRepository, IStudentRepository studentRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        super(employeeRepository, studentRepository, bCryptPasswordEncoder);
     }
 
     @Override
-    public ResetPasswordResponseDTO resetPassword(ResetPasswordRequestDTO requestDTO) {
+    public MessageResultResponseDTO resetPassword(PasswordResetRequestDTO requestDTO) {
         Optional<EmployeeModel> employeeOptional = employeeRepository.findByResetToken(requestDTO.getToken());
         if(employeeOptional.isPresent()){
             return handlePasswordReset(employeeOptional.get(),requestDTO,UserType.EMPLOYEE);
@@ -46,7 +36,8 @@ public class PasswordResetServiceImpl implements IPasswordResetService{
         }
         throw new InvalidTokenException("Invalid or expired reset  token");
     }
-    private ResetPasswordResponseDTO handlePasswordReset(UserModel userModel, ResetPasswordRequestDTO resetPasswordRequestDTO, UserType type){
+    private MessageResultResponseDTO handlePasswordReset(UserModel userModel, PasswordResetRequestDTO resetDTO, UserType type){
+        ResetPasswordFirstTimeRequestDTO resetPasswordRequestDTO = (ResetPasswordFirstTimeRequestDTO) resetDTO;
         validateToken(userModel.getTokenExpiry());
         validateOldPassword(resetPasswordRequestDTO.getOldPassword(),userModel.getPassword());
 
@@ -59,16 +50,6 @@ public class PasswordResetServiceImpl implements IPasswordResetService{
         }else{
             studentRepository.save((StudentModel) userModel);
         }
-        return new ResetPasswordResponseDTO("Password reset successful",true);
-    }
-    private void validateToken(LocalDateTime tokenExpiry){
-        if(tokenExpiry == null || tokenExpiry.isBefore(LocalDateTime.now())){
-            throw new InvalidTokenException("Reset token has been expired");
-        }
-    }
-    private void validateOldPassword(String rawOldPassword,String encodedPassword){
-        if(!bCryptPasswordEncoder.matches(rawOldPassword,encodedPassword)){
-            throw new PasswordMismatchException("Old password does not match");
-        }
+        return new MessageResultResponseDTO("Password reset successful",true);
     }
 }

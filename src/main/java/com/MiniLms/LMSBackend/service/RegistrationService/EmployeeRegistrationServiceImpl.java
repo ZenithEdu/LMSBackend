@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service("employeeRegistrationService")
-public class EmployeeRegistrationServiceImpl implements IRegistrationService {
+public class EmployeeRegistrationServiceImpl implements IRegistrationService, IGenerateResetToken {
 
     private final IEmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;

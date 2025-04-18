@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.exceptions.handlers;
 
-import com.MiniLms.LMSBackend.dto.ResponseDTO.ResetPasswordResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
+import com.MiniLms.LMSBackend.exceptions.InvalidEmailException;
 import com.MiniLms.LMSBackend.exceptions.InvalidTokenException;
 import com.MiniLms.LMSBackend.exceptions.PasswordMismatchException;
 import com.MiniLms.LMSBackend.exceptions.UserAlreadyExistsException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,17 +51,29 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ResetPasswordResponseDTO> handleInvalidToken(InvalidTokenException ex) {
-        return new ResponseEntity<>(new ResetPasswordResponseDTO(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<MessageResultResponseDTO> handleInvalidToken(InvalidTokenException ex) {
+        return new ResponseEntity<>(new MessageResultResponseDTO(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PasswordMismatchException.class)
-    public ResponseEntity<ResetPasswordResponseDTO> handlePasswordMismatch(PasswordMismatchException ex) {
-        return new ResponseEntity<>(new ResetPasswordResponseDTO(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<MessageResultResponseDTO> handlePasswordMismatch(PasswordMismatchException ex) {
+        return new ResponseEntity<>(new MessageResultResponseDTO(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResetPasswordResponseDTO> handleOtherExceptions(Exception ex) {
-        return new ResponseEntity<>(new ResetPasswordResponseDTO("Internal server error: " + ex.getMessage(), false), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<MessageResultResponseDTO> handleOtherExceptions(Exception ex) {
+        return new ResponseEntity<>(new MessageResultResponseDTO("Internal server error: " + ex.getMessage(), false), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidEmailException(InvalidEmailException ex) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("timestamp", LocalDateTime.now());
+        errorBody.put("status", HttpStatus.BAD_REQUEST.value());
+        errorBody.put("error", "Invalid Email");
+        errorBody.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+    }
+
 }

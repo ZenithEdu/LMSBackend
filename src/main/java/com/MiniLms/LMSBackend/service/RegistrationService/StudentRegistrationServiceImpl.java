@@ -19,7 +19,7 @@ import java.util.Optional;
 
 
 @Service("studentRegistrationService")
-public class StudentRegistrationServiceImpl implements IRegistrationService {
+public class StudentRegistrationServiceImpl implements IRegistrationService , IGenerateResetToken{
 
     private final IStudentRepository studentRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
