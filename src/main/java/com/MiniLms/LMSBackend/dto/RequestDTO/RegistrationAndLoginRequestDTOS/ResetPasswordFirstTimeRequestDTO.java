@@ -1,4 +1,4 @@
-package com.MiniLms.LMSBackend.dto.RequestDTO;
+package com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

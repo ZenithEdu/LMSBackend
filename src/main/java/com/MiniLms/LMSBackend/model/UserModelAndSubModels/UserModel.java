@@ -1,4 +1,4 @@
-package com.MiniLms.LMSBackend.model;
+package com.MiniLms.LMSBackend.model.UserModelAndSubModels;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

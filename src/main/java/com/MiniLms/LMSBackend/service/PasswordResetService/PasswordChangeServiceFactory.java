@@ -1,7 +1,5 @@
 package com.MiniLms.LMSBackend.service.PasswordResetService;
 
-import com.MiniLms.LMSBackend.model.UserType;
-import com.MiniLms.LMSBackend.service.RegistrationService.IRegistrationService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 

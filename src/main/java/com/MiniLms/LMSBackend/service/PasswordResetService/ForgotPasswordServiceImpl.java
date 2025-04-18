@@ -1,14 +1,17 @@
 package com.MiniLms.LMSBackend.service.PasswordResetService;
 
-import com.MiniLms.LMSBackend.dto.RequestDTO.ForgotPasswordRequestDTO;
-import com.MiniLms.LMSBackend.dto.RequestDTO.PasswordResetRequestDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.ForgotPasswordRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.PasswordResetRequestDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.MessageResultResponseDTO;
 import com.MiniLms.LMSBackend.exceptions.InvalidEmailException;
 import com.MiniLms.LMSBackend.exceptions.InvalidTokenException;
 import com.MiniLms.LMSBackend.exceptions.PasswordMismatchException;
-import com.MiniLms.LMSBackend.model.*;
-import com.MiniLms.LMSBackend.repository.IEmployeeRepository;
-import com.MiniLms.LMSBackend.repository.IStudentRepository;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import com.MiniLms.LMSBackend.service.UserService.IUserService;
 import com.MiniLms.LMSBackend.service.emailService.IForgotPasswordEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,8 +84,12 @@ public class ForgotPasswordServiceImpl extends PasswordServiceImpl implements IP
         userModel.setResetToken(generateToken);
         userModel.setTokenExpiry(tokenExpiry);
 
-        userService.saveUser(userModel);
-        forgotPasswordEmailService.sendForgotPasswordEmail(email,generateToken);
-        return new MessageResultResponseDTO("Token Generated and Email Send",true);
+        boolean isSaved = userService.saveUser(userModel);
+        if(isSaved) {
+            forgotPasswordEmailService.sendForgotPasswordEmail(email, generateToken);
+            return new MessageResultResponseDTO("Token Generated and Email Send", isSaved);
+        }else{
+            throw  new InvalidEmailException("Invalid Request");
+        }
     }
 }

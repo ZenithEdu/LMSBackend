@@ -1,15 +1,15 @@
 package com.MiniLms.LMSBackend.service.PasswordResetService;
 
-import com.MiniLms.LMSBackend.dto.RequestDTO.PasswordResetRequestDTO;
-import com.MiniLms.LMSBackend.dto.RequestDTO.ResetPasswordFirstTimeRequestDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.PasswordResetRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.ResetPasswordFirstTimeRequestDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.MessageResultResponseDTO;
 import com.MiniLms.LMSBackend.exceptions.InvalidTokenException;
-import com.MiniLms.LMSBackend.model.EmployeeModel;
-import com.MiniLms.LMSBackend.model.StudentModel;
-import com.MiniLms.LMSBackend.model.UserModel;
-import com.MiniLms.LMSBackend.model.UserType;
-import com.MiniLms.LMSBackend.repository.IEmployeeRepository;
-import com.MiniLms.LMSBackend.repository.IStudentRepository;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

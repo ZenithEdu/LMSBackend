@@ -1,9 +1,7 @@
-package com.MiniLms.LMSBackend.dto.RequestDTO;
+package com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS;
 
-import com.MiniLms.LMSBackend.model.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

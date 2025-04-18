@@ -1,7 +1,7 @@
 package com.MiniLms.LMSBackend.controller.Auth;
 
-import com.MiniLms.LMSBackend.dto.RequestDTO.UserLoginRequestDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.UserLoginResponseDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.UserLoginRequestDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.UserLoginResponseDTO;
 import com.MiniLms.LMSBackend.service.securityService.JwtTokenProvider;
 import com.MiniLms.LMSBackend.service.securityService.UserPrincipal;
 import jakarta.validation.Valid;

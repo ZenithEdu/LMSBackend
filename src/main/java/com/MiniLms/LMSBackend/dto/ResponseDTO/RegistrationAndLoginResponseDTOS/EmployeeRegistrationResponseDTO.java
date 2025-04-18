@@ -1,7 +1,7 @@
-package com.MiniLms.LMSBackend.dto.ResponseDTO;
+package com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS;
 
-import com.MiniLms.LMSBackend.model.EmployeeModel;
-import com.MiniLms.LMSBackend.model.UserType;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

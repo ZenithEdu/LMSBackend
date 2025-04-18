@@ -1,8 +1,7 @@
 package com.MiniLms.LMSBackend.service.UserService;
 
 
-import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
-import com.MiniLms.LMSBackend.model.UserModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserModel;
 
 import java.util.Optional;
 

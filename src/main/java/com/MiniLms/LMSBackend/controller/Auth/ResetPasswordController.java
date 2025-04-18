@@ -1,9 +1,9 @@
 package com.MiniLms.LMSBackend.controller.Auth;
 
-import com.MiniLms.LMSBackend.dto.RequestDTO.ForgotPasswordRequestDTO;
-import com.MiniLms.LMSBackend.dto.RequestDTO.ResetPasswordFirstTimeRequestDTO;
-import com.MiniLms.LMSBackend.dto.RequestDTO.VerifyEmailRequestDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.ForgotPasswordRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.ResetPasswordFirstTimeRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.VerifyEmailRequestDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.MessageResultResponseDTO;
 import com.MiniLms.LMSBackend.service.PasswordResetService.*;
 import com.MiniLms.LMSBackend.service.UserService.IUserService;
 import jakarta.validation.Valid;

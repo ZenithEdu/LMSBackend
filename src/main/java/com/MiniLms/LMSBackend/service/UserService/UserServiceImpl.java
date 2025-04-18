@@ -1,8 +1,11 @@
 package com.MiniLms.LMSBackend.service.UserService;
 
-import com.MiniLms.LMSBackend.model.*;
-import com.MiniLms.LMSBackend.repository.IEmployeeRepository;
-import com.MiniLms.LMSBackend.repository.IStudentRepository;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserModel;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

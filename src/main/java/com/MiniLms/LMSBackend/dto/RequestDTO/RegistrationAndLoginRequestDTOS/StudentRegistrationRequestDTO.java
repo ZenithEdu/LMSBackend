@@ -1,6 +1,6 @@
-package com.MiniLms.LMSBackend.dto.RequestDTO;
+package com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS;
 
-import com.MiniLms.LMSBackend.model.StudentModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

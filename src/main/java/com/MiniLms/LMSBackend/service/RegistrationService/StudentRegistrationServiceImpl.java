@@ -1,12 +1,12 @@
 package com.MiniLms.LMSBackend.service.RegistrationService;
 
-import com.MiniLms.LMSBackend.dto.RequestDTO.StudentRegistrationRequestDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.StudentRegistrationResponseDTO;
-import com.MiniLms.LMSBackend.dto.ResponseDTO.UserRegistrationResponseDTO;
-import com.MiniLms.LMSBackend.dto.RequestDTO.UserRegistrationRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.StudentRegistrationRequestDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.UserRegistrationResponseDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.UserRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.exceptions.UserAlreadyExistsException;
-import com.MiniLms.LMSBackend.model.StudentModel;
-import com.MiniLms.LMSBackend.repository.IStudentRepository;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import com.MiniLms.LMSBackend.service.emailService.IResetPasswordFirstTimeEmailService;
 import com.MiniLms.LMSBackend.utils.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;

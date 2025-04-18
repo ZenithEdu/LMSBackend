@@ -1,8 +1,8 @@
-package com.MiniLms.LMSBackend.dto.ResponseDTO;
+package com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS;
 
-import com.MiniLms.LMSBackend.model.Gender;
-import com.MiniLms.LMSBackend.model.Role;
-import com.MiniLms.LMSBackend.model.UserType;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Gender;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 

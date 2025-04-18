@@ -1,20 +1,16 @@
-package com.MiniLms.LMSBackend.dto.RequestDTO;
+package com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS;
 
-import com.MiniLms.LMSBackend.model.Gender;
-import com.MiniLms.LMSBackend.model.Role;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Gender;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
-
-import java.time.LocalDateTime;
 
 @Data
 @SuperBuilder

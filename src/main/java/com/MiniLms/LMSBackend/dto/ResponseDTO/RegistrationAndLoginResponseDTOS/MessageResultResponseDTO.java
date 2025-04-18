@@ -1,4 +1,4 @@
-package com.MiniLms.LMSBackend.dto.ResponseDTO;
+package com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

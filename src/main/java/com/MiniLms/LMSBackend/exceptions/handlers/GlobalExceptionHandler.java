@@ -1,6 +1,6 @@
 package com.MiniLms.LMSBackend.exceptions.handlers;
 
-import com.MiniLms.LMSBackend.dto.ResponseDTO.MessageResultResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.MessageResultResponseDTO;
 import com.MiniLms.LMSBackend.exceptions.InvalidEmailException;
 import com.MiniLms.LMSBackend.exceptions.InvalidTokenException;
 import com.MiniLms.LMSBackend.exceptions.PasswordMismatchException;

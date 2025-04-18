@@ -2,8 +2,8 @@ package com.MiniLms.LMSBackend.service.PasswordResetService;
 
 import com.MiniLms.LMSBackend.exceptions.InvalidTokenException;
 import com.MiniLms.LMSBackend.exceptions.PasswordMismatchException;
-import com.MiniLms.LMSBackend.repository.IEmployeeRepository;
-import com.MiniLms.LMSBackend.repository.IStudentRepository;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

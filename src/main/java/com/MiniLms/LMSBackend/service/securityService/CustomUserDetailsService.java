@@ -1,9 +1,9 @@
 package com.MiniLms.LMSBackend.service.securityService;
 
-import com.MiniLms.LMSBackend.model.EmployeeModel;
-import com.MiniLms.LMSBackend.model.StudentModel;
-import com.MiniLms.LMSBackend.repository.IEmployeeRepository;
-import com.MiniLms.LMSBackend.repository.IStudentRepository;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
+import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,9 +1,9 @@
 package com.MiniLms.LMSBackend.service.securityService;
 
-import com.MiniLms.LMSBackend.model.EmployeeModel;
-import com.MiniLms.LMSBackend.model.Role;
-import com.MiniLms.LMSBackend.model.StudentModel;
-import com.MiniLms.LMSBackend.model.UserType;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

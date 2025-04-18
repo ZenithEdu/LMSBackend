@@ -1,7 +1,6 @@
-package com.MiniLms.LMSBackend.repository;
+package com.MiniLms.LMSBackend.repository.UserRepositories;
 
-import com.MiniLms.LMSBackend.model.EmployeeModel;
-import com.MiniLms.LMSBackend.model.StudentModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
