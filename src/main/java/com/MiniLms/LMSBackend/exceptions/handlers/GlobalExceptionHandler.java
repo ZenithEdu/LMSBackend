@@ -1,10 +1,7 @@
 package com.MiniLms.LMSBackend.exceptions.handlers;
 
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.MessageResultResponseDTO;
-import com.MiniLms.LMSBackend.exceptions.InvalidEmailException;
-import com.MiniLms.LMSBackend.exceptions.InvalidTokenException;
-import com.MiniLms.LMSBackend.exceptions.PasswordMismatchException;
-import com.MiniLms.LMSBackend.exceptions.UserAlreadyExistsException;
+import com.MiniLms.LMSBackend.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -60,10 +57,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new MessageResultResponseDTO(ex.getMessage(), false), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<MessageResultResponseDTO> handleOtherExceptions(Exception ex) {
-        return new ResponseEntity<>(new MessageResultResponseDTO("Internal server error: " + ex.getMessage(), false), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
     @ExceptionHandler(InvalidEmailException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidEmailException(InvalidEmailException ex) {
@@ -74,6 +67,52 @@ public class GlobalExceptionHandler {
         errorBody.put("message", ex.getMessage());
 
         return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SubjectAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleSubjectAlreadyExistsException(SubjectAlreadyExistsException ex) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("timestamp", LocalDateTime.now());
+        errorBody.put("status", HttpStatus.CONFLICT.value());
+        errorBody.put("error", "Subject Already Exists");
+        errorBody.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorBody, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("error", "Resource Not Found");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put("error", "Internal Server Error");
+        body.put("message", ex.getMessage());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateResourceException(DuplicateResourceException ex) {
+        Map<String, Object> errorBody = new HashMap<>();
+        errorBody.put("timestamp", LocalDateTime.now());
+        errorBody.put("status", HttpStatus.CONFLICT.value());
+        errorBody.put("error", "Conflict");
+        errorBody.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorBody, HttpStatus.CONFLICT);
     }
 
 }
