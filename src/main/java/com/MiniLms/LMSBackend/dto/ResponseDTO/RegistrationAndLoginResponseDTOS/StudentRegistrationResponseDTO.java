@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @JsonTypeName("STUDENT")
 public class StudentRegistrationResponseDTO extends UserRegistrationResponseDTO {
+    private String branch;
     private String batchId;
 
     public static StudentRegistrationResponseDTO fromEntity(StudentModel student) {
@@ -19,11 +20,12 @@ public class StudentRegistrationResponseDTO extends UserRegistrationResponseDTO 
             .id(student.getId())
             .name(student.getName())
             .email(student.getEmail())
+            .phone(student.getPhone())
             .role(student.getRole())
             .gender(student.getGender())
             .batchId(student.getBatchId())
+            .branch(student.getBranch())
             .type(UserType.STUDENT)
             .build();
     }
-
 }

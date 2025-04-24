@@ -13,15 +13,18 @@ import lombok.experimental.SuperBuilder;
 @JsonTypeName("STUDENT")
 public class StudentRegistrationRequestDTO extends UserRegistrationRequestDTO{
     private String batchId;
+    private String branch;
 
     public StudentModel toEntity() {
         return StudentModel.builder()
             .id(this.getId())
             .name(this.getName())
             .email(this.getEmail())
+            .phone(this.getPhone())
             .role(this.getRole())
             .gender(this.getGender())
             .batchId(this.getBatchId())
+            .branch(this.branch)
             .build();
     }
 }

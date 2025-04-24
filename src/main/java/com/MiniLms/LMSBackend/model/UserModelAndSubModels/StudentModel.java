@@ -11,5 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentModel extends UserModel{
+    private String branch;
     private String batchId;
 }

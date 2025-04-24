@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,13 @@ public class UserRegistrationRequestDTO {
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
     private String email;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(
+        regexp = "^[6-9]\\d{9}$",
+        message = "Phone number must be 10 digits and start with 6, 7, 8, or 9"
+    )
+    private String phone;
 
     @NotNull(message = "Role is mandatory")
     private Role role;

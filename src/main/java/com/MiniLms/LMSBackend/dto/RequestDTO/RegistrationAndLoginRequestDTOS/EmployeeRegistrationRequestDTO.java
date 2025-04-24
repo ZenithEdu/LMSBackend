@@ -23,6 +23,7 @@ public class EmployeeRegistrationRequestDTO extends UserRegistrationRequestDTO {
             .id(this.getId())
             .name(this.getName())
             .email(this.getEmail())
+            .phone(this.getPhone())
             .role(this.getRole())
             .gender(this.getGender())
             .batchId(this.batchId)

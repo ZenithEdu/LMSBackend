@@ -21,6 +21,7 @@ public class EmployeeRegistrationResponseDTO extends UserRegistrationResponseDTO
             .id(employee.getId())
             .name(employee.getName())
             .email(employee.getEmail())
+            .phone(employee.getPhone())
             .role(employee.getRole())
             .gender(employee.getGender())
             .batchId(employee.getBatchId())
