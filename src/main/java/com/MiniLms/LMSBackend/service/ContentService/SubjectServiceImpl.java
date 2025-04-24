@@ -17,11 +17,14 @@ import java.util.stream.Collectors;
 public class SubjectServiceImpl implements ISubjectService{
 
     private final ISubjectRepository subjectRepository;
+    private final ITopicService topicService;
 
     public SubjectServiceImpl(
-        ISubjectRepository subjectRepository
+        ISubjectRepository subjectRepository,
+        ITopicService topicService
     ){
         this.subjectRepository = subjectRepository;
+        this.topicService = topicService;
     }
 
     @Override
@@ -69,10 +72,7 @@ public class SubjectServiceImpl implements ISubjectService{
     public void deleteSubject(String id) {
         SubjectModel existingSubject = subjectRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
-        Set<String> topicids = existingSubject.getTopicsIds();
-        for(int i = 0; i < topicids.size(); i++){
-
-        }
+        topicService.deleteAllBySubjectId(id);
         subjectRepository.delete(existingSubject);
     }
 }

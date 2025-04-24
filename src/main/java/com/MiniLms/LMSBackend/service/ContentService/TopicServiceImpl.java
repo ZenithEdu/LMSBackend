@@ -31,6 +31,7 @@ public class TopicServiceImpl implements ITopicService{
 
     private final ISubjectRepository subjectRepository;
     private final ITopicRepository topicRepository;
+    private final ISubtopicService subtopicService;
     private final GridFsTemplate gridFsTemplate;
     private final GridFsOperations gridFsOperations;
 
@@ -40,12 +41,14 @@ public class TopicServiceImpl implements ITopicService{
         ISubjectRepository subjectRepository,
         ITopicRepository topicRepository,
         GridFsTemplate gridFsTemplate,
-        GridFsOperations gridFsOperations
+        GridFsOperations gridFsOperations,
+        ISubtopicService subtopicService
     ){
         this.subjectRepository = subjectRepository;
         this.topicRepository = topicRepository;
         this.gridFsTemplate = gridFsTemplate;
         this.gridFsOperations = gridFsOperations;
+        this.subtopicService = subtopicService;
     }
 
     @Override
@@ -147,6 +150,42 @@ public class TopicServiceImpl implements ITopicService{
         deleteFile(topic.getResource().getSolution());
 
         topicRepository.deleteById(id);
+    }
+
+    public void deleteAllBySubjectId(String subjectId){
+        List<TopicModel> topics = topicRepository.findBySubjectId(subjectId);
+
+        // Delete all topics and their subtopics
+        for (TopicModel topic : topics) {
+            String topicId = topic.getId();
+            // Delete all subtopics first
+            subtopicService.deleteAllByTopicId(topicId);
+            // Then delete the topic
+            deleteTopic(subjectId, topicId);
+        }
+
+        // Clear subject's topic references
+        Optional<SubjectModel> subject = subjectRepository.findById(subjectId);
+        subject.ifPresent(sub -> {
+            sub.getTopicsIds().clear();
+            subjectRepository.save(sub);
+        });
+    }
+
+    @Override
+    public List<TopicResponseDTO> findAllBySubjectId(String subjectId) {
+        Optional<SubjectModel> hasSubject = subjectRepository.findById(subjectId);
+        if(hasSubject.isEmpty()){
+            throw new ResourceNotFoundException("This subject does not exists");
+        }
+        SubjectModel subjectModel = hasSubject.get();
+        Set<String> topicIds = subjectModel.getTopicsIds();
+        List<TopicModel> allTopics = topicRepository.findBySubjectId(subjectId);
+        List<TopicResponseDTO> ans = new ArrayList<>();
+        for(TopicModel topicModel : allTopics){
+            ans.add(convertToDto(topicModel));
+        }
+        return ans;
     }
 
     private void deleteFile(ObjectId fileId) {

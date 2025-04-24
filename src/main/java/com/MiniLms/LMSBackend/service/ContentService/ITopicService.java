@@ -14,4 +14,8 @@ public interface ITopicService {
     List<TopicResponseDTO> getTopicsBySubject(String subjectId);
 
     void deleteTopic(String subjectId, String id);
+
+    List<TopicResponseDTO> findAllBySubjectId(String subjectId);
+
+    void deleteAllBySubjectId(String subjectId);
 }
