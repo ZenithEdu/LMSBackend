@@ -12,6 +12,7 @@ import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserModel;
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import com.MiniLms.LMSBackend.repository.BatchRepository.IBatchRepository;
 import com.MiniLms.LMSBackend.service.ContentService.ISubjectService;
+import com.MiniLms.LMSBackend.service.RegistrationService.IRegistrationService;
 import com.MiniLms.LMSBackend.service.RegistrationService.RegistrationServiceFactory;
 import com.MiniLms.LMSBackend.service.RegistrationService.StudentRegistrationServiceImpl;
 import com.MiniLms.LMSBackend.service.UserService.IUserService;
@@ -56,6 +57,14 @@ public class BatchServiceImpl implements IBatchService{
     @Override
     public BatchCreationResponseDTO createBatchAsync(BatchCreationRequestDTO request,String processId) throws IOException {
         try{
+
+            Optional<BatchModel> existingBatch = batchRepository.findByNameIgnoreCase(request.getName());
+            if (existingBatch.isPresent()) {
+                String errorMsg = "Batch with this name already exists (case-insensitive) and cannot be created.";
+                throw new IllegalArgumentException(errorMsg);
+            }
+
+
             batchProcessService.updateStatus(processId,BatchProcessStatusCodes.VALIDATING_MANAGER,5);
             UserModel manager = validateManager(request.getManagerId());
 
@@ -80,6 +89,39 @@ public class BatchServiceImpl implements IBatchService{
             batchProcessService.updateStatus(processId,BatchProcessStatusCodes.FAILED,0,e.getMessage(),true);
             throw e;
         }
+    }
+
+    @Override
+    public BatchCreationResponseDTO getBatchById(String batchId) {
+        Optional<BatchModel> hasBatch = batchRepository.findById(batchId);
+        if(hasBatch.isEmpty()){
+            throw new ResourceNotFoundException("No Such batch Exists with Id : " + batchId);
+        }
+        return mapToResponseDTO(hasBatch.get());
+    }
+
+    @Override
+    public List<BatchCreationResponseDTO> getAllBatchesForManager(String managerId) {
+        List<BatchModel> allBatches = batchRepository.findByManagerId(managerId);
+        List<BatchCreationResponseDTO> responseDTOS = new ArrayList<>();
+        for(BatchModel batchModel : allBatches){
+            responseDTOS.add(mapToResponseDTO(batchModel));
+        }
+        return responseDTOS;
+    }
+
+    @Override
+    public StudentRegistrationResponseDTO saveStudentToBatch(StudentRegistrationRequestDTO student, String batchId) {
+        Optional<BatchModel> hasBatch = batchRepository.findById(batchId);
+        if(hasBatch.isEmpty()){
+            throw new ResourceNotFoundException("No Batch exists with id : " + batchId);
+        }
+        IRegistrationService registrationService = registrationServiceFactory.getService(UserType.STUDENT);
+        StudentRegistrationResponseDTO responseDTO = (StudentRegistrationResponseDTO) registrationService.register(student);
+        BatchModel model = hasBatch.get();
+        model.getStudentId().add(responseDTO.getId());
+        batchRepository.save(model);
+        return responseDTO;
     }
 
     private Set<String> parseAndRegisterStudents(MultipartFile studentFile, String id, String processId) throws IOException {

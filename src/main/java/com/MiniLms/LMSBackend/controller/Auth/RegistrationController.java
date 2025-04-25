@@ -24,20 +24,11 @@ public class RegistrationController {
         this.registrationServiceFactory = registrationServiceFactory;
     }
 
-    private IRegistrationService registrationService;
     @PostMapping("/register/employee")
     public ResponseEntity<?> registerEmployee(
         @Valid @RequestBody EmployeeRegistrationRequestDTO request) {
-        registrationService = registrationServiceFactory.getService(UserType.EMPLOYEE);
+        IRegistrationService registrationService = registrationServiceFactory.getService(UserType.EMPLOYEE);
         EmployeeRegistrationResponseDTO response = (EmployeeRegistrationResponseDTO) registrationService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PostMapping("/register/student")
-    public ResponseEntity<?> registerStudent(
-        @Valid @RequestBody StudentRegistrationRequestDTO request) {
-        registrationService = registrationServiceFactory.getService(UserType.STUDENT);
-        StudentRegistrationResponseDTO response = (StudentRegistrationResponseDTO) registrationService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

@@ -10,4 +10,5 @@ public interface IUserService {
     public boolean saveUser(UserModel userModel);
     public Optional<UserModel> findByMail(String email);
     public Optional<UserModel> findById(String id);
+    void deleteUser(String userId);
 }

@@ -79,4 +79,17 @@ public class UserServiceImpl implements IUserService{
         }
         return Optional.empty();
     }
+
+    @Override
+    public void deleteUser(String userId) {
+        Optional<UserModel> findUser = findById(userId);
+        if(findUser.isPresent()){
+            UserModel userModel = findUser.get();
+            if(userModel.getRole().equals(Role.STUDENT)){
+                studentRepository.deleteById(userId);
+            }else{
+                employeeRepository.deleteById(userId);
+            }
+        }
+    }
 }

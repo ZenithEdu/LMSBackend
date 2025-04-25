@@ -1,16 +1,23 @@
 package com.MiniLms.LMSBackend.controller.Batch;
 
 import com.MiniLms.LMSBackend.dto.RequestDTO.BatchRequestDTOs.BatchCreationRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.StudentRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchCreationResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import com.MiniLms.LMSBackend.service.BatchService.BatchProcessService;
 import com.MiniLms.LMSBackend.service.BatchService.BatchProcessStatusCodes;
+import com.MiniLms.LMSBackend.service.BatchService.IBatchCleanupService;
 import com.MiniLms.LMSBackend.service.BatchService.IBatchService;
+import com.MiniLms.LMSBackend.service.RegistrationService.IRegistrationService;
+import com.MiniLms.LMSBackend.service.RegistrationService.RegistrationServiceFactory;
 import com.MiniLms.LMSBackend.utils.InMemoryMultipartFile;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +33,23 @@ import java.util.concurrent.CompletableFuture;
 public class BatchController {
     private final IBatchService batchService;
     private final BatchProcessService batchProcessService;
+    private final RegistrationServiceFactory registrationServiceFactory;
+    private final IBatchCleanupService batchCleanupService;
     private final Logger logger = LoggerFactory.getLogger(BatchController.class);
 
     @Autowired
     public BatchController(
         IBatchService batchService,
-        BatchProcessService batchProcessService
+        BatchProcessService batchProcessService,
+        RegistrationServiceFactory registrationServiceFactory,
+        IBatchCleanupService batchCleanupService
     ){
         this.batchService = batchService;
         this.batchProcessService = batchProcessService;
+        this.registrationServiceFactory = registrationServiceFactory;
+        this.batchCleanupService = batchCleanupService;
     }
+
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, String>> createBatch(
@@ -95,6 +109,8 @@ public class BatchController {
             "statusUrl","/api/batches/status/"+processId
         ));
     }
+
+
     @GetMapping("/status/{processId}")
     public ResponseEntity<BatchProcessService.BatchProcessStatus> getStatus(
         @PathVariable String processId
@@ -106,5 +122,30 @@ public class BatchController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/{batchId}")
+    public ResponseEntity<BatchCreationResponseDTO> getBatchById(@PathVariable String batchId){
+        return ResponseEntity.ok(batchService.getBatchById(batchId));
+    }
+
+    @GetMapping("/manager/{managerId}")
+    public ResponseEntity<?> getAllBatchesForManager(@PathVariable String managerId){
+        return ResponseEntity.ok(batchService.getAllBatchesForManager(managerId));
+    }
+
+    @PutMapping("/{batchId}/student")
+    public ResponseEntity<StudentRegistrationResponseDTO> registerStudentInBatch(
+        @Valid @RequestBody StudentRegistrationRequestDTO request,
+        @PathVariable String batchId
+    ){
+        request.setBatchId(batchId);
+        return ResponseEntity.ok(batchService.saveStudentToBatch(request,batchId));
+    }
+
+    @PostMapping("/trigger-cleanup")
+    public ResponseEntity<String> triggerCleanup() {
+        batchCleanupService.cleanupExpiredBatches();
+        return ResponseEntity.ok("Cleanup triggered successfully");
     }
 }

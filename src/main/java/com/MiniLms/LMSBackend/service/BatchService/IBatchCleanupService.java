@@ -1,0 +1,5 @@
+package com.MiniLms.LMSBackend.service.BatchService;
+
+public interface IBatchCleanupService {
+    public void cleanupExpiredBatches();
+}

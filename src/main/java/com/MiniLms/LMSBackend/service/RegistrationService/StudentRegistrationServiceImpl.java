@@ -52,6 +52,7 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
         studentModel.setPassword(bCryptPasswordEncoder.encode(password));
         studentModel.setResetToken(resetToken);
         studentModel.setTokenExpiry(tokenExpiry);
+        studentModel.setBatchId(studentRegistrationRequestDto.getBatchId());
 
         studentModel = studentRepository.save(studentModel);
 
