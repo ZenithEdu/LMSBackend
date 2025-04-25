@@ -36,7 +36,7 @@ public class BatchModel implements Serializable {
     private Set<BatchSubject> subjects = new HashSet<>();
 
     @Builder.Default
-    private List<String> studentId = new ArrayList<>();
+    private Set<String> studentId = new HashSet<>();
 
     @Data
     @NoArgsConstructor
@@ -49,7 +49,7 @@ public class BatchModel implements Serializable {
 
         @Builder.Default
         @NotNull
-        private List<SelectedTopic> selectedTopics = new ArrayList<>();
+        private Set<SelectedTopic> selectedTopics = new HashSet<>();
     }
 
     @Data
@@ -66,7 +66,7 @@ public class BatchModel implements Serializable {
 
         @Builder.Default
         @NotNull
-        private List<SelectedSubtopic> selectedSubtopics = new ArrayList<>();
+        private Set<SelectedSubtopic> selectedSubtopics = new HashSet<>();
     }
 
     @Data

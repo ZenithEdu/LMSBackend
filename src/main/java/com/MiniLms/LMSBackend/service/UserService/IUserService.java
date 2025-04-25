@@ -9,4 +9,5 @@ public interface IUserService {
     public boolean verifyEmail(String email);
     public boolean saveUser(UserModel userModel);
     public Optional<UserModel> findByMail(String email);
+    public Optional<UserModel> findById(String id);
 }

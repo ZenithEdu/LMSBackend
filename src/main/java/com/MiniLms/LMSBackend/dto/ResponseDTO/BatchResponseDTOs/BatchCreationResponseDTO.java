@@ -18,7 +18,7 @@ public class BatchCreationResponseDTO {
     private LocalDate endDate;
     private String managerId;
     private Set<BatchSubjectResponse> subjects;
-    private List<String> studentId;
+    private Set<String> studentId;
 
     @Data
     @NoArgsConstructor
@@ -26,7 +26,7 @@ public class BatchCreationResponseDTO {
     @Builder
     public static class BatchSubjectResponse {
         private String subjectId;
-        private List<SelectedTopicResponse> selectedTopics;
+        private Set<SelectedTopicResponse> selectedTopics;
     }
 
     @Data
@@ -36,7 +36,7 @@ public class BatchCreationResponseDTO {
     public static class SelectedTopicResponse {
         private String topicId;
         private LocalDate selectedDate;
-        private List<SelectedSubtopicResponse> selectedSubtopics;
+        private Set<SelectedSubtopicResponse> selectedSubtopics;
     }
 
     @Data

@@ -24,7 +24,7 @@ public class StudentRegistrationRequestDTO extends UserRegistrationRequestDTO{
             .role(this.getRole())
             .gender(this.getGender())
             .batchId(this.getBatchId())
-            .branch(this.branch)
+            .branch(this.getBranch())
             .build();
     }
 }

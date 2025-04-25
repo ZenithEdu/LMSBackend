@@ -39,7 +39,8 @@ public class WebSecurityConfig {
                         "/api/auth/login",
                         "/api/auth/register/**",
                         "/api/auth/reset/**",
-                        "/api/content/**"
+                        "/api/content/**",
+                        "/api/batches/**"
                     ).permitAll()
                     .anyRequest().authenticated()
             )

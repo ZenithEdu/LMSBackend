@@ -66,4 +66,17 @@ public class UserServiceImpl implements IUserService{
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<UserModel> findById(String id) {
+        Optional<EmployeeModel> isEmployee = employeeRepository.findById(id);
+        if(isEmployee.isPresent()){
+            return Optional.of(isEmployee.get());
+        }
+        Optional<StudentModel> isStudent = studentRepository.findById(id);
+        if(isStudent.isPresent()){
+            return Optional.of(isStudent.get());
+        }
+        return Optional.empty();
+    }
 }

@@ -63,7 +63,7 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
         return response;
     }
 
-    public List<StudentRegistrationResponseDTO> registerMultipleStudents(List<StudentRegistrationRequestDTO> studentRegistrationRequestDTOS){
+    public List<StudentRegistrationResponseDTO> registerMultipleStudents(List<StudentRegistrationRequestDTO> studentRegistrationRequestDTOS, String id){
         List<String> emails = studentRegistrationRequestDTOS.stream()
             .map(StudentRegistrationRequestDTO :: getEmail)
             .toList();
@@ -87,6 +87,7 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
                 student.setPassword(bCryptPasswordEncoder.encode(password));
                 student.setResetToken(resetToken);
                 student.setTokenExpiry(tokenExpiry);
+                student.setBatchId(id);
 
                 return new StudentWithPassword(student,password);
             })
