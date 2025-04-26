@@ -37,6 +37,7 @@ public class WebSecurityConfig {
                 request -> request
                     .requestMatchers(
                         "/api/auth/login",
+                        "/api/auth/logout",
                         "/api/auth/register/**",
                         "/api/auth/reset/**",
                         "/api/content/**",
