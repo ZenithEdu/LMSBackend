@@ -134,7 +134,7 @@ public class BatchController {
         return ResponseEntity.ok(batchService.getAllBatchesForManager(managerId));
     }
 
-    @PutMapping("/{batchId}/student")
+    @PostMapping("/{batchId}/student")
     public ResponseEntity<StudentRegistrationResponseDTO> registerStudentInBatch(
         @Valid @RequestBody StudentRegistrationRequestDTO request,
         @PathVariable String batchId
@@ -148,4 +148,6 @@ public class BatchController {
         batchCleanupService.cleanupExpiredBatches();
         return ResponseEntity.ok("Cleanup triggered successfully");
     }
+
+
 }

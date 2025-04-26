@@ -80,6 +80,19 @@ public class BatchModel implements Serializable {
 
         @NotNull(message = "Selected date is required for subtopic")
         private LocalDate selectedDate;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SelectedSubtopic that = (SelectedSubtopic) o;
+            return Objects.equals(subtopicId, that.subtopicId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(subtopicId);
+        }
     }
 }
 
