@@ -23,8 +23,4 @@ import java.util.Set;
 public class TopicModel extends CommonTopicModel{
     @NotBlank(message = "Subject ID is required")
     private String subjectId;
-
-    @Size(max = 50, message = "Maximum of 50 subtopic IDs allowed")
-    private Set<@NotBlank(message = "Subtopic ID cannot be blank") String> subtopicIds;
-
 }

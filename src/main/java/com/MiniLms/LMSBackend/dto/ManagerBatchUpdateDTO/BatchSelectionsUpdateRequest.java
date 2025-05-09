@@ -15,7 +15,4 @@ import java.util.Set;
 public class BatchSelectionsUpdateRequest {
     @NotEmpty(message = "Topic updates cannot be empty")
     private Set<@Valid TopicUpdateDTO> topicUpdates;
-
-    @NotEmpty(message = "Subtopic updates cannot be empty")
-    private Set<@Valid SubtopicUpdateDTO> subtopicUpdates;
 }

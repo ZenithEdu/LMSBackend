@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +32,6 @@ public class TopicServiceImpl implements ITopicService{
 
     private final ISubjectRepository subjectRepository;
     private final ITopicRepository topicRepository;
-    private final ISubtopicService subtopicService;
     private final GridFsTemplate gridFsTemplate;
     private final GridFsOperations gridFsOperations;
 
@@ -41,17 +41,16 @@ public class TopicServiceImpl implements ITopicService{
         ISubjectRepository subjectRepository,
         ITopicRepository topicRepository,
         GridFsTemplate gridFsTemplate,
-        GridFsOperations gridFsOperations,
-        ISubtopicService subtopicService
+        GridFsOperations gridFsOperations
     ){
         this.subjectRepository = subjectRepository;
         this.topicRepository = topicRepository;
         this.gridFsTemplate = gridFsTemplate;
         this.gridFsOperations = gridFsOperations;
-        this.subtopicService = subtopicService;
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public TopicResponseDTO createTopic(TopicRequestDTO dto, String subjectId) throws IOException {
 
         Optional<SubjectModel> hasSubject = subjectRepository.findById(subjectId);
@@ -76,33 +75,8 @@ public class TopicServiceImpl implements ITopicService{
         return convertToDto(topicModel);
     }
 
-    private Resource storeFiles(ResourceRequestDTO resourceRequestDTO) throws IOException{
-        Resource resource = new Resource();
-        if(resourceRequestDTO.getAdditionalResources() != null){
-            resource.setAdditionalResources(storeFile(resourceRequestDTO.getAdditionalResources()));
-        }
-        if(resourceRequestDTO.getExercise() != null){
-            resource.setExercise(storeFile(resourceRequestDTO.getExercise()));
-        }
-        if(resourceRequestDTO.getSolution() != null){
-            resource.setSolution(storeFile(resourceRequestDTO.getSolution()));
-        }
-        resource.setPractice(resourceRequestDTO.getPractice());
-        resource.setArticle(resourceRequestDTO.getArticle());
-        resource.setVideo(resourceRequestDTO.getVideo());
-
-        return resource;
-    }
-
-    private ObjectId storeFile(MultipartFile file) throws IOException{
-        return gridFsTemplate.store(
-            file.getInputStream(),
-            file.getOriginalFilename(),
-            file.getContentType()
-        );
-    }
-
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STUDENT')")
     public TopicResponseDTO getTopic(String id) {
         Optional<TopicModel> hasTopic = topicRepository.findById(id);
         if(hasTopic.isEmpty()){
@@ -112,6 +86,7 @@ public class TopicServiceImpl implements ITopicService{
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public List<TopicResponseDTO> getTopicsBySubject(String subjectId) {
         Optional<SubjectModel> hasSubject = subjectRepository.findById(subjectId);
         if(hasSubject.isEmpty()){
@@ -129,6 +104,7 @@ public class TopicServiceImpl implements ITopicService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteTopic(String subjectId,String id) {
         Optional<SubjectModel> hasSubject = subjectRepository.findById(subjectId);
         if(hasSubject.isEmpty()){
@@ -145,22 +121,21 @@ public class TopicServiceImpl implements ITopicService{
         TopicModel topic = topicRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Topic not found"));
 
-        deleteFile(topic.getResource().getAdditionalResources());
+        deleteFile(topic.getResource().getClassPPT());
         deleteFile(topic.getResource().getExercise());
         deleteFile(topic.getResource().getSolution());
 
         topicRepository.deleteById(id);
     }
 
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAllBySubjectId(String subjectId){
         List<TopicModel> topics = topicRepository.findBySubjectId(subjectId);
 
         // Delete all topics and their subtopics
         for (TopicModel topic : topics) {
             String topicId = topic.getId();
-            // Delete all subtopics first
-            subtopicService.deleteAllByTopicId(topicId);
-            // Then delete the topic
             deleteTopic(subjectId, topicId);
         }
 
@@ -199,8 +174,7 @@ public class TopicServiceImpl implements ITopicService{
             .id(topic.getId())
             .name(topic.getName())
             .subjectId(topic.getSubjectId())
-            .subtopicIds(topic.getSubtopicIds())
-            .responseDTO(convertResourceToDto(topic.getResource()))
+            .resourceResponseDTO(convertResourceToDto(topic.getResource()))
             .build();
     }
 
@@ -208,12 +182,37 @@ public class TopicServiceImpl implements ITopicService{
         return ResourceResponseDTO.builder()
             .article(resource.getArticle())
             .video(resource.getVideo())
-            .additionalResourcesUrl(getFileUrl(resource.getAdditionalResources()))
+            .classPPTUrl(getFileUrl(resource.getClassPPT()))
             .exerciseUrl(getFileUrl(resource.getExercise()))
             .solutionUrl(getFileUrl(resource.getSolution()))
-            .practiceUrl(resource.getPractice())
             .build();
     }
+
+    private Resource storeFiles(ResourceRequestDTO resourceRequestDTO) throws IOException{
+        Resource resource = new Resource();
+        if(resourceRequestDTO.getClassPPT() != null){
+            resource.setClassPPT(storeFile(resourceRequestDTO.getClassPPT()));
+        }
+        if(resourceRequestDTO.getExercise() != null){
+            resource.setExercise(storeFile(resourceRequestDTO.getExercise()));
+        }
+        if(resourceRequestDTO.getSolution() != null){
+            resource.setSolution(storeFile(resourceRequestDTO.getSolution()));
+        }
+        resource.setArticle(resourceRequestDTO.getArticle());
+        resource.setVideo(resourceRequestDTO.getVideo());
+
+        return resource;
+    }
+
+    private ObjectId storeFile(MultipartFile file) throws IOException{
+        return gridFsTemplate.store(
+            file.getInputStream(),
+            file.getOriginalFilename(),
+            file.getContentType()
+        );
+    }
+
     private String getFileUrl(ObjectId fileId) {
         return fileId != null ? "api/content/files/" + fileId.toString() : null;
     }

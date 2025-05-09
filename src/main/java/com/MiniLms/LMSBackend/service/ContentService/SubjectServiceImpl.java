@@ -6,6 +6,7 @@ import com.MiniLms.LMSBackend.exceptions.ResourceNotFoundException;
 import com.MiniLms.LMSBackend.exceptions.SubjectAlreadyExistsException;
 import com.MiniLms.LMSBackend.model.ContentModels.SubjectModel;
 import com.MiniLms.LMSBackend.repository.ContentRepositories.ISubjectRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class SubjectServiceImpl implements ISubjectService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public SubjectResponseDTO createSubject(SubjectRequestDTO subjectRequestDTO) {
         String name = subjectRequestDTO.getName();
         Optional<SubjectModel> hasSubject = subjectRepository.findByName(name);
@@ -40,6 +42,7 @@ public class SubjectServiceImpl implements ISubjectService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public List<SubjectResponseDTO> getAllSubjects() {
         return subjectRepository.findAll()
             .stream()
@@ -48,6 +51,7 @@ public class SubjectServiceImpl implements ISubjectService{
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STUDENT')")
     public SubjectResponseDTO getSubjectById(String id) {
         Optional<SubjectModel> hasSubject = subjectRepository.findById(id);
         if(hasSubject.isEmpty()){
@@ -57,6 +61,7 @@ public class SubjectServiceImpl implements ISubjectService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public SubjectResponseDTO updateSubject(String id, SubjectRequestDTO dto) {
         SubjectModel existingSubject = subjectRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
@@ -69,6 +74,7 @@ public class SubjectServiceImpl implements ISubjectService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteSubject(String id) {
         SubjectModel existingSubject = subjectRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));

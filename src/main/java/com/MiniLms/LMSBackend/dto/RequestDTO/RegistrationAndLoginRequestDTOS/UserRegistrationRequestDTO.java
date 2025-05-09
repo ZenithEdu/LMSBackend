@@ -23,8 +23,8 @@ import org.springframework.data.annotation.Id;
     property = "type"
 )
 public class UserRegistrationRequestDTO {
-    @Id
-    private String id;
+//    @Id
+//    private String id;
 
     @NotBlank(message = "Name is mandatory")
     private String name;

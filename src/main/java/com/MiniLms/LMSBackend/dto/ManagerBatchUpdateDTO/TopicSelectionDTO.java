@@ -24,7 +24,4 @@ public class TopicSelectionDTO {
     private LocalDate selectedDate;
 
     private boolean selected;
-
-    @NotNull(message = "Subtopics cannot be null")
-    private Set<@Valid SubtopicSelectionDTO> subtopics;
 }

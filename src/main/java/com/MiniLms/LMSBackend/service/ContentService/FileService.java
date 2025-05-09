@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -34,6 +35,7 @@ public class FileService implements IFileService{
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STUDENT')")
     public ResponseEntity<InputStreamResource> getFileById(String id) throws IOException {
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(id))));
 

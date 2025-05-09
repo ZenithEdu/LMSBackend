@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,10 +51,8 @@ public class BatchCleanupServiceImpl implements IBatchCleanupService{
     }
 
 
-    @Scheduled(cron = "0 0 1 * * ?") // runs daily at 1 AM
-    @Transactional
-    @Override
-    public void cleanupExpiredBatches() {
+
+    private void cleanupExpiredBatches() {
         LocalDate today = LocalDate.now();
         List<BatchModel> expiredBatches = batchRepository.findByEndDateBefore(today);
         if(expiredBatches == null || expiredBatches.isEmpty()){
@@ -79,6 +78,20 @@ public class BatchCleanupServiceImpl implements IBatchCleanupService{
 
         logCleanupResult(today, deletedCount, batchDetails.toString());
         logger.info("Deleted {} batches on {}", deletedCount, today.format(DATE_FORMAT));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    @Override
+    public void cleanupExpiredBatchesManual(){
+        cleanupExpiredBatches();
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?") // runs daily at 1 AM
+    @Transactional
+    @Override
+    public void cleanupExpiredBatchesScheduled(){
+        cleanupExpiredBatches();
     }
 
     @Scheduled(cron = "0 0 2 * * ?") // Runs daily at 2 AM

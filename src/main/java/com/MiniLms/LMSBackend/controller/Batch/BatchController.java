@@ -145,7 +145,7 @@ public class BatchController {
 
     @PostMapping("/trigger-cleanup")
     public ResponseEntity<String> triggerCleanup() {
-        batchCleanupService.cleanupExpiredBatches();
+        batchCleanupService.cleanupExpiredBatchesManual();
         return ResponseEntity.ok("Cleanup triggered successfully");
     }
 

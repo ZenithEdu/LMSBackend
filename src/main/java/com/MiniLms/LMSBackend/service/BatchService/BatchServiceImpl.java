@@ -10,13 +10,11 @@ import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.U
 import com.MiniLms.LMSBackend.exceptions.ResourceNotFoundException;
 import com.MiniLms.LMSBackend.model.BatchModels.BatchModel;
 import com.MiniLms.LMSBackend.model.ContentModels.SubjectModel;
-import com.MiniLms.LMSBackend.model.ContentModels.SubtopicModel;
 import com.MiniLms.LMSBackend.model.ContentModels.TopicModel;
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserModel;
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import com.MiniLms.LMSBackend.repository.BatchRepository.IBatchRepository;
 import com.MiniLms.LMSBackend.repository.ContentRepositories.ISubjectRepository;
-import com.MiniLms.LMSBackend.repository.ContentRepositories.ISubtopicRepository;
 import com.MiniLms.LMSBackend.repository.ContentRepositories.ITopicRepository;
 import com.MiniLms.LMSBackend.service.ContentService.ISubjectService;
 import com.MiniLms.LMSBackend.service.RegistrationService.IRegistrationService;
@@ -27,6 +25,7 @@ import com.MiniLms.LMSBackend.utils.ExcelFileParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +43,6 @@ public class BatchServiceImpl implements IBatchService{
     private final IBatchRepository batchRepository;
     private final ISubjectRepository subjectRepository;
     private final ITopicRepository topicRepository;
-    private final ISubtopicRepository subtopicRepository;
     private final  RegistrationServiceFactory registrationServiceFactory;
     private final BatchProcessService batchProcessService;
     private final Logger log = LoggerFactory.getLogger(BatchServiceImpl.class);
@@ -56,7 +54,6 @@ public class BatchServiceImpl implements IBatchService{
         IBatchRepository batchRepository,
         ISubjectRepository subjectRepository,
         ITopicRepository topicRepository,
-        ISubtopicRepository subtopicRepository,
         RegistrationServiceFactory registrationServiceFactory,
         BatchProcessService batchProcessService
     ){
@@ -65,13 +62,13 @@ public class BatchServiceImpl implements IBatchService{
         this.batchRepository = batchRepository;
         this.subjectRepository = subjectRepository;
         this.topicRepository = topicRepository;
-        this.subtopicRepository = subtopicRepository;
         this.registrationServiceFactory = registrationServiceFactory;
         this.batchProcessService = batchProcessService;
     }
 
 
     @Override
+    @PreAuthorize("hasRole('Admin')")
     public BatchCreationResponseDTO createBatchAsync(BatchCreationRequestDTO request,String processId) throws IOException {
         try{
 
@@ -109,6 +106,7 @@ public class BatchServiceImpl implements IBatchService{
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STUDENT'")
     public BatchCreationResponseDTO getBatchById(String batchId) {
         Optional<BatchModel> hasBatch = batchRepository.findById(batchId);
         if(hasBatch.isEmpty()){
@@ -118,6 +116,7 @@ public class BatchServiceImpl implements IBatchService{
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public List<BatchCreationResponseDTO> getAllBatchesForManager(String managerId) {
         List<BatchModel> allBatches = batchRepository.findByManagerId(managerId);
         List<BatchCreationResponseDTO> responseDTOS = new ArrayList<>();
@@ -128,6 +127,7 @@ public class BatchServiceImpl implements IBatchService{
     }
 
     @Override
+    @PreAuthorize("hasRole('MANAGER')")
     public StudentRegistrationResponseDTO saveStudentToBatch(StudentRegistrationRequestDTO student, String batchId) {
         Optional<BatchModel> hasBatch = batchRepository.findById(batchId);
         if(hasBatch.isEmpty()){
@@ -142,6 +142,7 @@ public class BatchServiceImpl implements IBatchService{
     }
 
     @Override
+    @PreAuthorize("hasRole('MANAGER')")
     public SubjectSelectionDTO getSubjectSelections(String batchId, String subjectId) {
         BatchModel batch = batchRepository.findById(batchId)
             .orElseThrow(() -> new ResourceNotFoundException("Batch not found"));
@@ -153,32 +154,21 @@ public class BatchServiceImpl implements IBatchService{
     }
 
     @Override
+    @PreAuthorize("hasRole('MANAGER')")
     public void updateSelections(String batchId, String subjectId, BatchSelectionsUpdateRequest request) {
         BatchModel batch = batchRepository.findById(batchId)
             .orElseThrow(() -> new ResourceNotFoundException("Batch not found"));
 
         // Find or create BatchSubject
-        BatchModel.BatchSubject batchSubject = null;
-        for (BatchModel.BatchSubject bs : batch.getSubjects()) {
-            if (bs.getSubjectId().equals(subjectId)) {
-                batchSubject = bs;
-                break;
-            }
-        }
-
-        if (batchSubject == null) {
-            batchSubject = new BatchModel.BatchSubject();
-            batchSubject.setSubjectId(subjectId);
-            batch.getSubjects().add(batchSubject);
-        }
+        BatchModel.BatchSubject batchSubject = findOrCreateBatchSubject(batch, subjectId);
 
         updateTopicSelections(batchSubject, request.getTopicUpdates());
-        updateSubtopicSelections(batchSubject, request.getSubtopicUpdates());
 
         batchRepository.save(batch);
     }
 
     @Override
+    @PreAuthorize("hasRole('STUDENT')")
     public List<SubjectSelectionDTO> getBatchCurriculum(String batchId) {
         BatchModel batch = batchRepository.findById(batchId)
             .orElseThrow(() -> new ResourceNotFoundException("Batch not found"));
@@ -192,6 +182,11 @@ public class BatchServiceImpl implements IBatchService{
         }
         return curriculum;
     }
+
+
+
+
+
     private SubjectSelectionDTO mapToStudentViewDTO(
         BatchModel.BatchSubject batchSubject,
         SubjectModel subject
@@ -200,17 +195,33 @@ public class BatchServiceImpl implements IBatchService{
         dto.setSubjectId(subject.getId());
         dto.setSubjectName(subject.getName());
 
-        Set<TopicSelectionDTO> topicDTOs = new HashSet<>();
-        List<TopicModel> topics = topicRepository.findBySubjectId(subject.getId());
-
-        for (TopicModel topic : topics) {
-            if (isTopicSelected(batchSubject, topic.getId())) {
-                topicDTOs.add(mapTopicDTO(batchSubject, topic));
-            }
-        }
-
+        Set<TopicSelectionDTO> topicDTOs = batchSubject.getSelectedTopics().stream()
+            .map(selectedTopic -> {
+                TopicModel topic = topicRepository.findById(selectedTopic.getTopicId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Topic not found"));
+                TopicSelectionDTO topicDTO = new TopicSelectionDTO();
+                topicDTO.setTopicId(topic.getId());
+                topicDTO.setTopicName(topic.getName());
+                topicDTO.setSelectedDate(selectedTopic.getSelectedDate());
+                return topicDTO;
+            })
+            .collect(Collectors.toSet());
         dto.setTopics(topicDTOs);
+
         return dto;
+    }
+
+    private BatchModel.BatchSubject findOrCreateBatchSubject(BatchModel batch, String subjectId) {
+        return batch.getSubjects().stream()
+            .filter(bs -> bs.getSubjectId().equals(subjectId))
+            .findFirst()
+            .orElseGet(() -> {
+                BatchModel.BatchSubject newBatchSubject = new BatchModel.BatchSubject();
+                newBatchSubject.setSubjectId(subjectId);
+                newBatchSubject.setSelectedTopics(new HashSet<>());
+                batch.getSubjects().add(newBatchSubject);
+                return newBatchSubject;
+            });
     }
 
     private boolean isTopicSelected(BatchModel.BatchSubject batchSubject, String topicId) {
@@ -220,31 +231,6 @@ public class BatchServiceImpl implements IBatchService{
             }
         }
         return false;
-    }
-
-    private TopicSelectionDTO mapTopicDTO(
-        BatchModel.BatchSubject batchSubject,
-        TopicModel topic
-    ) {
-        TopicSelectionDTO topicDTO = new TopicSelectionDTO();
-        topicDTO.setTopicId(topic.getId());
-        topicDTO.setTopicName(topic.getName());
-
-        BatchModel.SelectedTopic selectedTopic = findSelectedTopic(batchSubject, topic.getId());
-        topicDTO.setSelectedDate(selectedTopic != null ? selectedTopic.getSelectedDate() : null);
-
-        Set<SubtopicSelectionDTO> subtopicDTOs = new HashSet<>();
-        for (String subtopicId : topic.getSubtopicIds()) {
-            SubtopicModel subtopic = subtopicRepository.findById(subtopicId)
-                .orElseThrow(() -> new ResourceNotFoundException("Subtopic not found"));
-
-            if (isSubtopicSelected(selectedTopic, subtopic.getId())) {
-                subtopicDTOs.add(mapSubtopicDTO(selectedTopic, subtopic));
-            }
-        }
-
-        topicDTO.setSubtopics(subtopicDTOs);
-        return topicDTO;
     }
 
     private BatchModel.SelectedTopic findSelectedTopic(
@@ -257,42 +243,6 @@ public class BatchServiceImpl implements IBatchService{
             }
         }
         return null;
-    }
-
-    private boolean isSubtopicSelected(
-        BatchModel.SelectedTopic selectedTopic,
-        String subtopicId
-    ) {
-        if (selectedTopic == null) return false;
-
-        for (BatchModel.SelectedSubtopic ss : selectedTopic.getSelectedSubtopics()) {
-            if (ss.getSubtopicId().equals(subtopicId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private SubtopicSelectionDTO mapSubtopicDTO(
-        BatchModel.SelectedTopic selectedTopic,
-        SubtopicModel subtopic
-    ) {
-        SubtopicSelectionDTO subtopicDTO = new SubtopicSelectionDTO();
-        subtopicDTO.setSubtopicId(subtopic.getId());
-        subtopicDTO.setSubtopicName(subtopic.getName());
-
-        LocalDate selectedDate = null;
-        if (selectedTopic != null) {
-            for (BatchModel.SelectedSubtopic ss : selectedTopic.getSelectedSubtopics()) {
-                if (ss.getSubtopicId().equals(subtopic.getId())) {
-                    selectedDate = ss.getSelectedDate();
-                    break;
-                }
-            }
-        }
-
-        subtopicDTO.setSelectedDate(selectedDate);
-        return subtopicDTO;
     }
 
     private void updateTopicSelections(BatchModel.BatchSubject batchSubject, Set<TopicUpdateDTO> updates) {
@@ -309,7 +259,6 @@ public class BatchServiceImpl implements IBatchService{
                     BatchModel.SelectedTopic newTopic = new BatchModel.SelectedTopic();
                     newTopic.setTopicId(update.getTopicId());
                     newTopic.setSelectedDate(LocalDate.now());
-                    newTopic.setSelectedSubtopics(new HashSet<>());
                     batchSubject.getSelectedTopics().add(newTopic);
                 }
             } else {
@@ -319,37 +268,6 @@ public class BatchServiceImpl implements IBatchService{
                     if (st.getTopicId().equals(update.getTopicId())) {
                         iterator.remove();
                         break;
-                    }
-                }
-            }
-        }
-    }
-
-    private void updateSubtopicSelections(BatchModel.BatchSubject batchSubject, Set<SubtopicUpdateDTO> updates) {
-        for (SubtopicUpdateDTO update : updates) {
-            for (BatchModel.SelectedTopic topic : batchSubject.getSelectedTopics()) {
-                if (update.isSelected()) {
-                    boolean exists = false;
-                    for (BatchModel.SelectedSubtopic ss : topic.getSelectedSubtopics()) {
-                        if (ss.getSubtopicId().equals(update.getSubtopicId())) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if (!exists) {
-                        BatchModel.SelectedSubtopic newSS = new BatchModel.SelectedSubtopic();
-                        newSS.setSubtopicId(update.getSubtopicId());
-                        newSS.setSelectedDate(LocalDate.now());
-                        topic.getSelectedSubtopics().add(newSS);
-                    }
-                } else {
-                    Iterator<BatchModel.SelectedSubtopic> iterator = topic.getSelectedSubtopics().iterator();
-                    while (iterator.hasNext()) {
-                        BatchModel.SelectedSubtopic ss = iterator.next();
-                        if (ss.getSubtopicId().equals(update.getSubtopicId())) {
-                            iterator.remove();
-                            break;
-                        }
                     }
                 }
             }
@@ -372,23 +290,17 @@ public class BatchServiceImpl implements IBatchService{
         return dto;
     }
 
-    private TopicSelectionDTO mapTopicSelectionDTO(BatchModel batch, String subjectId, TopicModel topic) {
+    private TopicSelectionDTO mapTopicSelectionDTO(
+        BatchModel batch,
+        String subjectId,
+        TopicModel topic
+    ) {
         Optional<BatchModel.SelectedTopic> selectedTopic = findSelectedTopic(batch, subjectId, topic.getId());
         TopicSelectionDTO dto = new TopicSelectionDTO();
         dto.setTopicId(topic.getId());
         dto.setTopicName(topic.getName());
         dto.setSelected(selectedTopic.isPresent());
         dto.setSelectedDate(selectedTopic.map(BatchModel.SelectedTopic::getSelectedDate).orElse(null));
-
-        // Process subtopics from topic's subtopicIds
-        Set<SubtopicSelectionDTO> subtopicDTOs = new HashSet<>();
-        for (String subtopicId : topic.getSubtopicIds()) {
-            SubtopicModel subtopic = subtopicRepository.findById(subtopicId)
-                .orElseThrow(() -> new ResourceNotFoundException("Subtopic not found: " + subtopicId));
-            subtopicDTOs.add(mapSubtopicSelectionDTO(selectedTopic, subtopic));
-        }
-        dto.setSubtopics(subtopicDTOs);
-
         return dto;
     }
 
@@ -404,30 +316,6 @@ public class BatchServiceImpl implements IBatchService{
             }
         }
         return Optional.empty();
-    }
-
-    private SubtopicSelectionDTO mapSubtopicSelectionDTO(Optional<BatchModel.SelectedTopic> selectedTopicOpt, SubtopicModel subtopic) {
-        SubtopicSelectionDTO dto = new SubtopicSelectionDTO();
-        dto.setSubtopicId(subtopic.getId());
-        dto.setSubtopicName(subtopic.getName());
-
-        boolean selected = false;
-        LocalDate selectedDate = null;
-
-        if (selectedTopicOpt.isPresent()) {
-            BatchModel.SelectedTopic selectedTopic = selectedTopicOpt.get();
-            for (BatchModel.SelectedSubtopic ss : selectedTopic.getSelectedSubtopics()) {
-                if (ss.getSubtopicId().equals(subtopic.getId())) {
-                    selected = true;
-                    selectedDate = ss.getSelectedDate();
-                    break;
-                }
-            }
-        }
-
-        dto.setSelected(selected);
-        dto.setSelectedDate(selectedDate);
-        return dto;
     }
 
 
@@ -471,6 +359,7 @@ public class BatchServiceImpl implements IBatchService{
             .subjects(batchSubjects)
             .build();
     }
+
     private BatchCreationResponseDTO mapToResponseDTO(BatchModel batch) {
         return BatchCreationResponseDTO.builder()
             .id(batch.getId())
@@ -497,16 +386,6 @@ public class BatchServiceImpl implements IBatchService{
             .map(topic -> BatchCreationResponseDTO.SelectedTopicResponse.builder()
                 .topicId(topic.getTopicId())
                 .selectedDate(topic.getSelectedDate())
-                .selectedSubtopics(mapSelectedSubtopics(topic.getSelectedSubtopics()))
-                .build())
-            .collect(Collectors.toSet());
-    }
-
-    private Set<BatchCreationResponseDTO.SelectedSubtopicResponse> mapSelectedSubtopics(Set<BatchModel.SelectedSubtopic> selectedSubtopics) {
-        return selectedSubtopics.stream()
-            .map(subtopic -> BatchCreationResponseDTO.SelectedSubtopicResponse.builder()
-                .subtopicId(subtopic.getSubtopicId())
-                .selectedDate(subtopic.getSelectedDate())
                 .build())
             .collect(Collectors.toSet());
     }

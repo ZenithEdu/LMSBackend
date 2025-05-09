@@ -14,5 +14,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommonTopicResponseDTO extends CommonContentResponseDTO{
-    private ResourceResponseDTO responseDTO;
+    private ResourceResponseDTO resourceResponseDTO;
 }

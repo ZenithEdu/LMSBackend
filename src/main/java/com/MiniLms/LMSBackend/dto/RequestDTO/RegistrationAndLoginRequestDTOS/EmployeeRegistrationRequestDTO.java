@@ -20,7 +20,6 @@ public class EmployeeRegistrationRequestDTO extends UserRegistrationRequestDTO {
     // And a method to convert from DTO to Entity
     public EmployeeModel toEntity() {
         return EmployeeModel.builder()
-            .id(this.getId())
             .name(this.getName())
             .email(this.getEmail())
             .phone(this.getPhone())

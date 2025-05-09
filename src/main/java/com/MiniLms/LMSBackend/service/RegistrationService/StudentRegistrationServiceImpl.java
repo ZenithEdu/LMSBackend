@@ -10,6 +10,7 @@ import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import com.MiniLms.LMSBackend.service.emailService.IResetPasswordFirstTimeEmailService;
 import com.MiniLms.LMSBackend.utils.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
     }
 
     @Override
+    @PreAuthorize("hasRole('MANAGER')")
     public UserRegistrationResponseDTO register(UserRegistrationRequestDTO userRegistrationRequestDTO) throws RuntimeException {
         StudentRegistrationRequestDTO studentRegistrationRequestDto = (StudentRegistrationRequestDTO) userRegistrationRequestDTO;
         Optional<StudentModel> hasStudent = studentRepository.findByEmail(userRegistrationRequestDTO.getEmail());
@@ -64,6 +66,7 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
         return response;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<StudentRegistrationResponseDTO> registerMultipleStudents(List<StudentRegistrationRequestDTO> studentRegistrationRequestDTOS, String id){
         List<String> emails = studentRegistrationRequestDTOS.stream()
             .map(StudentRegistrationRequestDTO :: getEmail)

@@ -17,14 +17,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class TopicResponseDTO extends CommonTopicResponseDTO{
     private String subjectId;
-    private Set<String> subtopicIds;
-
     public static TopicResponseDTO fromEntity(TopicModel topicModel) {
         return TopicResponseDTO.builder()
             .id(topicModel.getId())
             .name(topicModel.getName())
             .subjectId(topicModel.getSubjectId())
-            .subtopicIds(topicModel.getSubtopicIds())
             .build();
     }
 

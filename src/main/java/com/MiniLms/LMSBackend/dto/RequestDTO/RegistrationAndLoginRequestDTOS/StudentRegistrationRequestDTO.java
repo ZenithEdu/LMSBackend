@@ -17,7 +17,6 @@ public class StudentRegistrationRequestDTO extends UserRegistrationRequestDTO{
 
     public StudentModel toEntity() {
         return StudentModel.builder()
-            .id(this.getId())
             .name(this.getName())
             .email(this.getEmail())
             .phone(this.getPhone())

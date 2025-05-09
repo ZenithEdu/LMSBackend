@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.service.emailService;
 
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -21,7 +21,6 @@ public class TopicRequestDTO extends CommonTopicRequestDTO{
             .name(this.getName())
             .subjectId(subjectId)
             .resource(resource)
-            .subtopicIds(new HashSet<>())
             .build();
     }
 }

@@ -10,6 +10,7 @@ import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
 import com.MiniLms.LMSBackend.service.emailService.IResetPasswordFirstTimeEmailService;
 import com.MiniLms.LMSBackend.utils.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class EmployeeRegistrationServiceImpl implements IRegistrationService, IG
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public UserRegistrationResponseDTO register(UserRegistrationRequestDTO userRegistrationRequestDTO) throws UserAlreadyExistsException {
         EmployeeRegistrationRequestDTO employeeRegistrationRequestDto = (EmployeeRegistrationRequestDTO) userRegistrationRequestDTO;
         Optional<EmployeeModel> hasEmployee = employeeRepository.findByEmail(userRegistrationRequestDTO.getEmail());

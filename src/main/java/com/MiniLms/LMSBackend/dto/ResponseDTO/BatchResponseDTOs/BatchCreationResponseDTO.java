@@ -36,15 +36,5 @@ public class BatchCreationResponseDTO {
     public static class SelectedTopicResponse {
         private String topicId;
         private LocalDate selectedDate;
-        private Set<SelectedSubtopicResponse> selectedSubtopics;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class SelectedSubtopicResponse {
-        private String subtopicId;
-        private LocalDate selectedDate;
     }
 }
