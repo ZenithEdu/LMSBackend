@@ -4,12 +4,10 @@ import com.MiniLms.LMSBackend.dto.RequestDTO.BatchRequestDTOs.BatchCreationReque
 import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.StudentRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchCreationResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
-import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import com.MiniLms.LMSBackend.service.BatchService.BatchProcessService;
 import com.MiniLms.LMSBackend.service.BatchService.BatchProcessStatusCodes;
 import com.MiniLms.LMSBackend.service.BatchService.IBatchCleanupService;
 import com.MiniLms.LMSBackend.service.BatchService.IBatchService;
-import com.MiniLms.LMSBackend.service.RegistrationService.IRegistrationService;
 import com.MiniLms.LMSBackend.service.RegistrationService.RegistrationServiceFactory;
 import com.MiniLms.LMSBackend.utils.InMemoryMultipartFile;
 import jakarta.validation.Valid;
@@ -17,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -149,5 +146,8 @@ public class BatchController {
         return ResponseEntity.ok("Cleanup triggered successfully");
     }
 
-
+    @GetMapping
+    public ResponseEntity<?> getAllBatches(){
+        return ResponseEntity.ok(batchService.getAllBatches());
+    }
 }

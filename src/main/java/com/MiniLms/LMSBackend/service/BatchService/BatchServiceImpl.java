@@ -119,11 +119,14 @@ public class BatchServiceImpl implements IBatchService{
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public List<BatchCreationResponseDTO> getAllBatchesForManager(String managerId) {
         List<BatchModel> allBatches = batchRepository.findByManagerId(managerId);
-        List<BatchCreationResponseDTO> responseDTOS = new ArrayList<>();
-        for(BatchModel batchModel : allBatches){
-            responseDTOS.add(mapToResponseDTO(batchModel));
-        }
-        return responseDTOS;
+        return cumulateBatches(allBatches);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<BatchCreationResponseDTO> getAllBatches() {
+        List<BatchModel> allBatches = batchRepository.findAll();
+        return cumulateBatches(allBatches);
     }
 
     @Override
@@ -184,7 +187,13 @@ public class BatchServiceImpl implements IBatchService{
     }
 
 
-
+    private List<BatchCreationResponseDTO> cumulateBatches(List<BatchModel> batches){
+        List<BatchCreationResponseDTO> responseDTOS = new ArrayList<>();
+        for(BatchModel model : batches){
+            responseDTOS.add(mapToResponseDTO(model));
+        }
+        return responseDTOS;
+    }
 
 
     private SubjectSelectionDTO mapToStudentViewDTO(

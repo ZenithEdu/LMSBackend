@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.service.securityService;
 
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
 import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
 import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
@@ -34,5 +35,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             return new UserPrincipal(employeeOptional.get());
         }
         throw new UsernameNotFoundException("User not found with email: " + email);
+    }
+
+    public boolean doesAdminExist(){
+        return employeeRepository.existsByRole(Role.ADMIN);
     }
 }

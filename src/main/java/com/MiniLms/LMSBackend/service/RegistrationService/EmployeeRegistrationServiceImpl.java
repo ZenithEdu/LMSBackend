@@ -36,8 +36,17 @@ public class EmployeeRegistrationServiceImpl implements IRegistrationService, IG
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public UserRegistrationResponseDTO register(UserRegistrationRequestDTO userRegistrationRequestDTO) throws UserAlreadyExistsException {
+        return registerEmployee(userRegistrationRequestDTO);
+    }
+
+    public UserRegistrationResponseDTO createFirstAdmin(UserRegistrationRequestDTO userRegistrationRequestDTO){
+        return registerEmployee(userRegistrationRequestDTO);
+    }
+
+
+    private UserRegistrationResponseDTO registerEmployee(UserRegistrationRequestDTO userRegistrationRequestDTO) throws UserAlreadyExistsException{
         EmployeeRegistrationRequestDTO employeeRegistrationRequestDto = (EmployeeRegistrationRequestDTO) userRegistrationRequestDTO;
         Optional<EmployeeModel> hasEmployee = employeeRepository.findByEmail(userRegistrationRequestDTO.getEmail());
 

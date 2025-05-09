@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.repository.UserRepositories;
 
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,5 @@ import java.util.Optional;
 public interface IEmployeeRepository extends MongoRepository<EmployeeModel,String> {
     Optional<EmployeeModel> findByEmail(String email);
     Optional<EmployeeModel> findByResetToken(String resetToken);
+    boolean existsByRole(Role role);
 }
