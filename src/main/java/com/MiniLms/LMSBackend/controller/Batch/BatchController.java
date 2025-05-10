@@ -53,7 +53,7 @@ public class BatchController {
         @Valid @RequestPart("batchCreationRequestDTO") BatchCreationRequestDTO batchCreationRequestDTO,
         @RequestPart("studentFile")MultipartFile file
     ){
-        log.info("Received file - name: {}, size: {}, content type: {}",
+        logger.info("Received file - name: {}, size: {}, content type: {}",
             file.getOriginalFilename(),
             file.getSize(),
             file.getContentType());
@@ -149,5 +149,10 @@ public class BatchController {
     @GetMapping
     public ResponseEntity<?> getAllBatches(){
         return ResponseEntity.ok(batchService.getAllBatches());
+    }
+
+    @GetMapping("/countBatches")
+    public ResponseEntity<?> getBatchCount(){
+        return ResponseEntity.ok(batchService.getBatchCount());
     }
 }

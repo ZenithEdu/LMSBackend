@@ -18,6 +18,7 @@ public interface IBatchService {
 
     List<BatchCreationResponseDTO> getAllBatchesForManager(String managerId);
     List<BatchCreationResponseDTO> getAllBatches();
+    Long getBatchCount();
 
     StudentRegistrationResponseDTO saveStudentToBatch(StudentRegistrationRequestDTO studentId, String batchId);
 

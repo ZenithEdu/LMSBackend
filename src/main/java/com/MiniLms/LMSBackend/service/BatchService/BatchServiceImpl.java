@@ -130,6 +130,12 @@ public class BatchServiceImpl implements IBatchService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public Long getBatchCount() {
+        return batchRepository.count();
+    }
+
+    @Override
     @PreAuthorize("hasRole('MANAGER')")
     public StudentRegistrationResponseDTO saveStudentToBatch(StudentRegistrationRequestDTO student, String batchId) {
         Optional<BatchModel> hasBatch = batchRepository.findById(batchId);
