@@ -2,6 +2,7 @@ package com.MiniLms.LMSBackend.controller.Content;
 
 import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.ResourceRequestDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.TopicRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.TopicUpdateRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.TopicResponseDTO;
 import com.MiniLms.LMSBackend.service.ContentService.ITopicService;
 import jakarta.validation.Valid;
@@ -46,8 +47,9 @@ public class TopicController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TopicResponseDTO> updateTopic(@PathVariable String id, @RequestBody TopicRequestDTO topicDTO) {
-        return null;
+    public ResponseEntity<TopicResponseDTO> updateTopic(@PathVariable String id, @RequestBody TopicUpdateRequestDTO topicDTO) throws IOException {
+        TopicResponseDTO responseDTO = topicService.updateTopic(id,topicDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping

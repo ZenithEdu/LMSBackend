@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.service.ContentService;
 
 import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.TopicRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.TopicUpdateRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.TopicResponseDTO;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ public interface ITopicService {
     TopicResponseDTO getTopic(String id);
 
     List<TopicResponseDTO> getTopicsBySubject(String subjectId);
+
+    TopicResponseDTO updateTopic(String topicId, TopicUpdateRequestDTO dto) throws IOException;
 
     void deleteTopic(String subjectId, String id);
 

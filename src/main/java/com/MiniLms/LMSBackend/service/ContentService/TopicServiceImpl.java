@@ -2,6 +2,7 @@ package com.MiniLms.LMSBackend.service.ContentService;
 
 import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.ResourceRequestDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.TopicRequestDTO;
+import com.MiniLms.LMSBackend.dto.RequestDTO.ContentRequestDTOs.TopicUpdateRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.ResourceResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.TopicResponseDTO;
 import com.MiniLms.LMSBackend.exceptions.DuplicateResourceException;
@@ -101,6 +102,42 @@ public class TopicServiceImpl implements ITopicService{
             ans.add(convertToDto(model));
         }
         return ans;
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public TopicResponseDTO updateTopic(String topicId, TopicUpdateRequestDTO dto) throws IOException {
+       TopicModel existing = topicRepository.findById(topicId)
+           .orElseThrow(() -> new ResourceNotFoundException("Topic not found"));
+
+       if(dto.getName() != null){
+           existing.setName(dto.getName());
+       }
+
+       if(dto.getResourceRequestDTO() != null){
+           Resource existingRes = existing.getResource();
+           ResourceRequestDTO requestDTO = dto.getResourceRequestDTO();
+
+           if(existingRes == null) {
+               existingRes = storeFiles(requestDTO);
+           }else{
+               if(requestDTO.getClassPPT() != null){
+                   existingRes.setClassPPT(storeFile(requestDTO.getClassPPT()));
+               }
+               if(requestDTO.getExercise() != null){
+                   existingRes.setExercise(storeFile(requestDTO.getExercise()));
+               }
+               if(requestDTO.getSolution() != null){
+                   existingRes.setSolution(storeFile(requestDTO.getSolution()));
+               }
+               existingRes.setArticle(requestDTO.getArticle());
+               existingRes.setVideo(requestDTO.getVideo());
+
+               existing.setResource(existingRes);
+           }
+       }
+       TopicModel model = topicRepository.save(existing);
+       return convertToDto(model);
     }
 
     @Override
