@@ -1,6 +1,6 @@
 #Build stage
 
-FROM maven:3.8.7-jdk-21 AS build
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /LMSBackend
 COPY pom.xml .
 COPY src ./src
