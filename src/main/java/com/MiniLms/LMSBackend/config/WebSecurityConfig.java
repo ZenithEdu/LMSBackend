@@ -5,6 +5,7 @@ import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -54,6 +55,7 @@ public class WebSecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(
                 request -> request
+                    .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                     .requestMatchers(
                         "/api/auth/login",
                         "/api/auth/logout",
@@ -74,14 +76,11 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-            "http://192.168.1.13:5173"  // Frontend developer's origin
+            "http://192.168.1.13:5173",
+            "http://localhost:5173"// Frontend developer's origin
         ));
         configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of(
-            "Authorization",
-            "Content-Type",
-            "Accept"
-        ));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
