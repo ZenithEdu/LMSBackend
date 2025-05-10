@@ -92,4 +92,14 @@ public class UserServiceImpl implements IUserService{
             }
         }
     }
+
+    @Override
+    public Long studentCount() {
+        return studentRepository.count();
+    }
+
+    @Override
+    public Long employeeCount() {
+        return employeeRepository.count();
+    }
 }

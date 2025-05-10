@@ -11,4 +11,6 @@ public interface IUserService {
     public Optional<UserModel> findByMail(String email);
     public Optional<UserModel> findById(String id);
     void deleteUser(String userId);
+    Long studentCount();
+    Long employeeCount();
 }
