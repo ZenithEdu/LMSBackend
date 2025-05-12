@@ -150,9 +150,4 @@ public class BatchController {
     public ResponseEntity<?> getAllBatches(){
         return ResponseEntity.ok(batchService.getAllBatches());
     }
-
-    @GetMapping("/countBatches")
-    public ResponseEntity<?> getBatchCount(){
-        return ResponseEntity.ok(batchService.getBatchCount());
-    }
 }

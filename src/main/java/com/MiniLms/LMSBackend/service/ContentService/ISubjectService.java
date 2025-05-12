@@ -13,4 +13,5 @@ public interface ISubjectService {
     SubjectResponseDTO getSubjectById(String id);
     SubjectResponseDTO updateSubject(String id, SubjectRequestDTO dto);
     void deleteSubject(String id);
+    Long subjectCount();
 }

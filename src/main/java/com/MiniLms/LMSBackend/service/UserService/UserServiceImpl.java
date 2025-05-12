@@ -1,14 +1,15 @@
 package com.MiniLms.LMSBackend.service.UserService;
 
-import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
-import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Role;
-import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
-import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserModel;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.UserRegistrationResponseDTO;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.*;
 import com.MiniLms.LMSBackend.repository.UserRepositories.IEmployeeRepository;
 import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -94,12 +95,51 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Long studentCount() {
         return studentRepository.count();
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public Long employeeCount() {
         return employeeRepository.count();
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteEmployee(String id) {
+        deleteUser(id);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserRegistrationResponseDTO> findAllByRole(String filterRole) {
+        if (!"ADMIN".equalsIgnoreCase(filterRole) && !"MANAGER".equalsIgnoreCase(filterRole)) {
+            throw new IllegalArgumentException("Invalid role filter. Allowed values: ADMIN, MANAGER");
+        }
+        List<EmployeeModel> employeeModels = null;
+        if("ADMIN".equalsIgnoreCase(filterRole)){
+            employeeModels = employeeRepository.findByRoleIgnoreCase(Role.ADMIN);
+        }else{
+            employeeModels = employeeRepository.findByRoleIgnoreCase(Role.MANAGER);
+        }
+        List<UserRegistrationResponseDTO> ans = new ArrayList<>();
+        for(EmployeeModel model : employeeModels){
+            ans.add(convertToDTO(model));
+        }
+        return ans;
+    }
+
+    private UserRegistrationResponseDTO convertToDTO(EmployeeModel model){
+        return UserRegistrationResponseDTO.builder()
+            .id(model.getId())
+            .name(model.getName())
+            .email(model.getEmail())
+            .phone(model.getPhone())
+            .role(model.getRole())
+            .gender(model.getGender())
+            .type(UserType.EMPLOYEE)
+            .build();
     }
 }

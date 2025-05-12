@@ -81,4 +81,10 @@ public class SubjectServiceImpl implements ISubjectService{
         topicService.deleteAllBySubjectId(id);
         subjectRepository.delete(existingSubject);
     }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public Long subjectCount() {
+        return subjectRepository.count();
+    }
 }
