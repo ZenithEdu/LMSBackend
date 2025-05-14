@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class EmployeeServiceImpl implements IEmployeeService{
 
@@ -55,5 +58,16 @@ public class EmployeeServiceImpl implements IEmployeeService{
 
         // 6. Convert to response DTO
         return EmployeeRegistrationResponseDTO.fromEntity(updatedEmployee);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<EmployeeRegistrationResponseDTO> getAllEmployees() {
+        List<EmployeeModel> allEmployee = employeeRepository.findAll();
+        List<EmployeeRegistrationResponseDTO> responseDTOS = new ArrayList<>();
+        for(EmployeeModel employeeModel : allEmployee){
+            responseDTOS.add(EmployeeRegistrationResponseDTO.fromEntity(employeeModel));
+        }
+        return responseDTOS;
     }
 }
