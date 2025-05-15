@@ -1,7 +1,7 @@
 package com.MiniLms.LMSBackend.service.emailService;
 
 public interface IForgotPasswordEmailService {
-    String RESET_LINK = "http://localhost:8081/changePassword" + "?token=";
+    String RESET_LINK = "http://localhost:5173/changePassword" + "?token=";
     String SUBJECT = "LMS Password Reset Request";
     String BODY1 = """
         We received a request to reset your LMS account password.
