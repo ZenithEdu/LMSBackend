@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,6 +55,10 @@ public class BatchController {
         @Valid @RequestPart("batchCreationRequestDTO") BatchCreationRequestDTO batchCreationRequestDTO,
         @RequestPart("studentFile")MultipartFile file
     ){
+        if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+            throw new IllegalArgumentException("Invalid file type. Please upload an Excel (.xlsx) file.");
+        }
+
         logger.info("Received file - name: {}, size: {}, content type: {}",
             file.getOriginalFilename(),
             file.getSize(),
@@ -66,8 +72,9 @@ public class BatchController {
         }
 
         String processId = batchProcessService.initializeProcess();
-
+        SecurityContext context = SecurityContextHolder.getContext();
         CompletableFuture.runAsync(() -> {
+            SecurityContextHolder.setContext(context);
             try{
 
                 MultipartFile fileCopy = new InMemoryMultipartFile(

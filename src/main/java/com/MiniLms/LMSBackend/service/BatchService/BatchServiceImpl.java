@@ -68,7 +68,7 @@ public class BatchServiceImpl implements IBatchService{
 
 
     @Override
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public BatchCreationResponseDTO createBatchAsync(BatchCreationRequestDTO request,String processId) throws IOException {
         try{
 
@@ -106,7 +106,7 @@ public class BatchServiceImpl implements IBatchService{
     }
 
     @Override
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STUDENT'")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STUDENT')")
     public BatchCreationResponseDTO getBatchById(String batchId) {
         Optional<BatchModel> hasBatch = batchRepository.findById(batchId);
         if(hasBatch.isEmpty()){
