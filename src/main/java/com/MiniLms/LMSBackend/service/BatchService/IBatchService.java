@@ -5,6 +5,7 @@ import com.MiniLms.LMSBackend.dto.ManagerBatchUpdateDTO.SubjectSelectionDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.BatchRequestDTOs.BatchCreationRequestDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.StudentRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchCreationResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchInfoResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,8 +17,8 @@ public interface IBatchService {
 
     BatchCreationResponseDTO getBatchById(String batchId);
 
-    List<BatchCreationResponseDTO> getAllBatchesForManager(String managerId);
-    List<BatchCreationResponseDTO> getAllBatches();
+    List<BatchInfoResponseDTO> getAllBatchesForManager(String managerId);
+    List<BatchInfoResponseDTO> getAllBatches();
     Long getBatchCount();
 
     StudentRegistrationResponseDTO saveStudentToBatch(StudentRegistrationRequestDTO studentId, String batchId);

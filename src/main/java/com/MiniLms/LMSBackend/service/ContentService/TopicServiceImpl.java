@@ -251,6 +251,6 @@ public class TopicServiceImpl implements ITopicService{
     }
 
     private String getFileUrl(ObjectId fileId) {
-        return fileId != null ? "api/content/files/" + fileId.toString() : null;
+        return fileId != null ? "https://lmsbackend-3l0h.onrender.com/api/content/files/" + fileId.toString() : null;
     }
 }

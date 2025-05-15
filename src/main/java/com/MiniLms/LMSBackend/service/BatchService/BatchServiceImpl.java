@@ -4,6 +4,7 @@ import com.MiniLms.LMSBackend.dto.ManagerBatchUpdateDTO.*;
 import com.MiniLms.LMSBackend.dto.RequestDTO.BatchRequestDTOs.BatchCreationRequestDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.StudentRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchCreationResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchInfoResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.SubjectResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.UserRegistrationResponseDTO;
@@ -117,14 +118,14 @@ public class BatchServiceImpl implements IBatchService{
 
     @Override
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public List<BatchCreationResponseDTO> getAllBatchesForManager(String managerId) {
+    public List<BatchInfoResponseDTO> getAllBatchesForManager(String managerId) {
         List<BatchModel> allBatches = batchRepository.findByManagerId(managerId);
         return cumulateBatches(allBatches);
     }
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public List<BatchCreationResponseDTO> getAllBatches() {
+    public List<BatchInfoResponseDTO> getAllBatches() {
         List<BatchModel> allBatches = batchRepository.findAll();
         return cumulateBatches(allBatches);
     }
@@ -193,10 +194,31 @@ public class BatchServiceImpl implements IBatchService{
     }
 
 
-    private List<BatchCreationResponseDTO> cumulateBatches(List<BatchModel> batches){
-        List<BatchCreationResponseDTO> responseDTOS = new ArrayList<>();
-        for(BatchModel model : batches){
-            responseDTOS.add(mapToResponseDTO(model));
+    private List<BatchInfoResponseDTO> cumulateBatches(List<BatchModel> batches){
+        List<BatchInfoResponseDTO> responseDTOS = new ArrayList<>();
+        for(BatchModel batchModel : batches){
+            String managerName = "";
+           Optional<UserModel> manager  = userService.findById(batchModel.getManagerId());
+           if(manager.isPresent()){
+               managerName = manager.get().getName();
+           }
+           Set<BatchModel.BatchSubject> subjects = batchModel.getSubjects();
+           Set<String> subjectNames = new HashSet<>();
+           for(BatchModel.BatchSubject batchSubject : subjects){
+               Optional<SubjectModel> subjectModel = subjectRepository.findById(batchSubject.getSubjectId());
+               if(subjectModel.isPresent()){
+                   subjectNames.add(subjectModel.get().getName());
+               }
+           }
+           responseDTOS.add(BatchInfoResponseDTO.builder()
+               .name(batchModel.getName())
+                   .managerName(managerName)
+                   .subjects(subjectNames)
+                   .startDate(batchModel.getStartDate())
+                   .endDate(batchModel.getEndDate())
+                   .numberOfStudents(batchModel.getStudentId().size())
+                   .build()
+               );
         }
         return responseDTOS;
     }
