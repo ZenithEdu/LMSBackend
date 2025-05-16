@@ -270,3 +270,5 @@
 2025-05-15T17:38:24.248+05:30  INFO 10102 --- [LMSBackend] [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2025-05-15T17:38:24.250+05:30  INFO 10102 --- [LMSBackend] [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2025-05-15T17:38:24.256+05:30  INFO 10102 --- [LMSBackend] [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+2025-05-15T18:50:39.082+05:30  INFO 10102 --- [LMSBackend] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-15T18:50:39.125+05:30  INFO 10102 --- [LMSBackend] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete

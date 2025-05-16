@@ -212,6 +212,7 @@ public class BatchServiceImpl implements IBatchService{
            }
            responseDTOS.add(BatchInfoResponseDTO.builder()
                .name(batchModel.getName())
+                   .batchId(batchModel.getId())
                    .managerName(managerName)
                    .subjects(subjectNames)
                    .startDate(batchModel.getStartDate())

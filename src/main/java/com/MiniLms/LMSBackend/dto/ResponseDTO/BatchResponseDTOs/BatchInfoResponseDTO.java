@@ -15,6 +15,7 @@ import java.util.Set;
 public class BatchInfoResponseDTO {
 
     private String name;
+    private String batchId;
     private LocalDate startDate;
     private LocalDate endDate;
     private String managerName;
