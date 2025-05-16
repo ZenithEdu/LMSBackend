@@ -3,6 +3,7 @@ package com.MiniLms.LMSBackend.controller.Batch;
 import com.MiniLms.LMSBackend.dto.RequestDTO.BatchRequestDTOs.BatchCreationRequestDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.StudentRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchCreationResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchInfoResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.service.BatchService.BatchProcessService;
 import com.MiniLms.LMSBackend.service.BatchService.BatchProcessStatusCodes;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -134,7 +136,7 @@ public class BatchController {
     }
 
     @GetMapping("/manager/{managerId}")
-    public ResponseEntity<?> getAllBatchesForManager(@PathVariable String managerId){
+    public ResponseEntity<List<BatchInfoResponseDTO>> getAllBatchesForManager(@PathVariable String managerId){
         return ResponseEntity.ok(batchService.getAllBatchesForManager(managerId));
     }
 
@@ -154,7 +156,7 @@ public class BatchController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllBatches(){
+    public ResponseEntity<List<BatchInfoResponseDTO>> getAllBatches(){
         return ResponseEntity.ok(batchService.getAllBatches());
     }
 }
