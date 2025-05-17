@@ -53,7 +53,7 @@ public class TopicController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllTopicsWithSubjectId(@PathVariable String subjectId){
+    public ResponseEntity<List<TopicResponseDTO>> findAllTopicsWithSubjectId(@PathVariable String subjectId){
         List<TopicResponseDTO> allTopics = topicService.findAllBySubjectId(subjectId);
         return ResponseEntity.ok(allTopics);
     }
