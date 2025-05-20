@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO;
 
 
+import com.MiniLms.LMSBackend.model.ContentModels.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

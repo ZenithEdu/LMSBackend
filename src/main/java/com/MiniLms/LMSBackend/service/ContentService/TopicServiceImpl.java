@@ -73,7 +73,7 @@ public class TopicServiceImpl implements ITopicService{
         subjectModel.setTopicsIds(updateTopicId);
         subjectRepository.save(subjectModel);
 
-        return convertToDto(topicModel);
+        return TopicResponseDTO.fromEntity(topicModel);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class TopicServiceImpl implements ITopicService{
         if(hasTopic.isEmpty()){
             throw new RuntimeException("Topic not Found");
         }
-        return convertToDto(hasTopic.get());
+        return TopicResponseDTO.fromEntity(hasTopic.get());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class TopicServiceImpl implements ITopicService{
         }
         List<TopicResponseDTO> ans = new ArrayList<>();
         for(TopicModel model : allTopics){
-            ans.add(convertToDto(model));
+            ans.add(TopicResponseDTO.fromEntity(model));
         }
         return ans;
     }
@@ -137,7 +137,7 @@ public class TopicServiceImpl implements ITopicService{
            }
        }
        TopicModel model = topicRepository.save(existing);
-       return convertToDto(model);
+       return TopicResponseDTO.fromEntity(model);
     }
 
     @Override
@@ -195,7 +195,7 @@ public class TopicServiceImpl implements ITopicService{
         List<TopicModel> allTopics = topicRepository.findBySubjectId(subjectId);
         List<TopicResponseDTO> ans = new ArrayList<>();
         for(TopicModel topicModel : allTopics){
-            ans.add(convertToDto(topicModel));
+            ans.add(TopicResponseDTO.fromEntity(topicModel));
         }
         return ans;
     }
@@ -204,25 +204,6 @@ public class TopicServiceImpl implements ITopicService{
         if(fileId != null) {
             gridFsTemplate.delete(new Query(Criteria.where("_id").is(fileId)));
         }
-    }
-
-    private TopicResponseDTO convertToDto(TopicModel topic) {
-        return TopicResponseDTO.builder()
-            .id(topic.getId())
-            .name(topic.getName())
-            .subjectId(topic.getSubjectId())
-            .resourceResponseDTO(convertResourceToDto(topic.getResource()))
-            .build();
-    }
-
-    private ResourceResponseDTO convertResourceToDto(Resource resource) {
-        return ResourceResponseDTO.builder()
-            .article(resource.getArticle())
-            .video(resource.getVideo())
-            .classPPTUrl(getFileUrl(resource.getClassPPT()))
-            .exerciseUrl(getFileUrl(resource.getExercise()))
-            .solutionUrl(getFileUrl(resource.getSolution()))
-            .build();
     }
 
     private Resource storeFiles(ResourceRequestDTO resourceRequestDTO) throws IOException{
@@ -248,9 +229,5 @@ public class TopicServiceImpl implements ITopicService{
             file.getOriginalFilename(),
             file.getContentType()
         );
-    }
-
-    private String getFileUrl(ObjectId fileId) {
-        return fileId != null ? "https://lmsbackend-3l0h.onrender.com/api/content/files/" + fileId.toString() : null;
     }
 }

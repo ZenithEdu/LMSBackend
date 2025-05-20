@@ -241,6 +241,7 @@ public class BatchServiceImpl implements IBatchService{
                 TopicSelectionDTO topicDTO = new TopicSelectionDTO();
                 topicDTO.setTopicResponseDTO(TopicResponseDTO.fromEntity(topic));
                 topicDTO.setSelectedDate(selectedTopic.getSelectedDate());
+                topicDTO.setSelected(true);
                 return topicDTO;
             })
             .collect(Collectors.toSet());
