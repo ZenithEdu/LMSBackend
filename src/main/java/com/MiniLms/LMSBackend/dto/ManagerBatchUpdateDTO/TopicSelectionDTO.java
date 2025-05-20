@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.dto.ManagerBatchUpdateDTO;
 
 
+import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.TopicResponseDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,11 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TopicSelectionDTO {
-    @NotBlank(message = "Topic ID cannot be blank")
-    private String topicId;
-
-    @NotBlank(message = "Topic name cannot be blank")
-    private String topicName;
+    private TopicResponseDTO topicResponseDTO;
 
     private LocalDate selectedDate;
 

@@ -6,6 +6,7 @@ import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.Stu
 import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchCreationResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.BatchResponseDTOs.BatchInfoResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.SubjectResponseDTO;
+import com.MiniLms.LMSBackend.dto.ResponseDTO.ContentResponseDTO.TopicResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.UserRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.exceptions.ResourceNotFoundException;
@@ -238,8 +239,7 @@ public class BatchServiceImpl implements IBatchService{
                 TopicModel topic = topicRepository.findById(selectedTopic.getTopicId())
                     .orElseThrow(() -> new ResourceNotFoundException("Topic not found"));
                 TopicSelectionDTO topicDTO = new TopicSelectionDTO();
-                topicDTO.setTopicId(topic.getId());
-                topicDTO.setTopicName(topic.getName());
+                topicDTO.setTopicResponseDTO(TopicResponseDTO.fromEntity(topic));
                 topicDTO.setSelectedDate(selectedTopic.getSelectedDate());
                 return topicDTO;
             })
@@ -335,8 +335,7 @@ public class BatchServiceImpl implements IBatchService{
     ) {
         Optional<BatchModel.SelectedTopic> selectedTopic = findSelectedTopic(batch, subjectId, topic.getId());
         TopicSelectionDTO dto = new TopicSelectionDTO();
-        dto.setTopicId(topic.getId());
-        dto.setTopicName(topic.getName());
+        dto.setTopicResponseDTO(TopicResponseDTO.fromEntity(topic));
         dto.setSelected(selectedTopic.isPresent());
         dto.setSelectedDate(selectedTopic.map(BatchModel.SelectedTopic::getSelectedDate).orElse(null));
         return dto;
