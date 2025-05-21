@@ -160,7 +160,7 @@ public class BatchController {
         return ResponseEntity.ok(batchService.getAllBatches());
     }
 
-    @GetMapping("/{batchId}")
+    @GetMapping("/batchName/{batchId}")
     public ResponseEntity<String> getBatchNameById(String id){
         return ResponseEntity.ok(batchService.getBatchById(id).getName());
     }
