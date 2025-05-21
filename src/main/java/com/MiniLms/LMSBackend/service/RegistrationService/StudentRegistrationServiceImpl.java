@@ -4,10 +4,13 @@ import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.Stu
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.StudentRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.UserRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.UserRegistrationRequestDTO;
+import com.MiniLms.LMSBackend.exceptions.ResourceNotFoundException;
 import com.MiniLms.LMSBackend.exceptions.UserAlreadyExistsException;
 import com.MiniLms.LMSBackend.model.BatchModels.BatchModel;
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
+import com.MiniLms.LMSBackend.repository.BatchRepository.IBatchRepository;
 import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
+import com.MiniLms.LMSBackend.service.BatchService.IBatchService;
 import com.MiniLms.LMSBackend.service.emailService.IResetPasswordFirstTimeEmailService;
 import com.MiniLms.LMSBackend.utils.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ import java.util.Optional;
 public class StudentRegistrationServiceImpl implements IRegistrationService , IGenerateResetToken{
 
     private final IStudentRepository studentRepository;
+    private final IBatchRepository batchRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final IResetPasswordFirstTimeEmailService resetPasswordFirstTimeEmailService;
 
@@ -31,11 +35,13 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
     public StudentRegistrationServiceImpl(
         IStudentRepository studentRepository,
         BCryptPasswordEncoder bCryptPasswordEncoder,
-        IResetPasswordFirstTimeEmailService resetPasswordFirstTimeEmailService
+        IResetPasswordFirstTimeEmailService resetPasswordFirstTimeEmailService,
+        IBatchRepository batchRepository
     ){
         this.studentRepository = studentRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.resetPasswordFirstTimeEmailService = resetPasswordFirstTimeEmailService;
+        this.batchRepository = batchRepository;
     }
 
     @Override
@@ -43,10 +49,16 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
     public UserRegistrationResponseDTO register(UserRegistrationRequestDTO userRegistrationRequestDTO) throws RuntimeException {
         StudentRegistrationRequestDTO studentRegistrationRequestDto = (StudentRegistrationRequestDTO) userRegistrationRequestDTO;
         Optional<StudentModel> hasStudent = studentRepository.findByEmail(userRegistrationRequestDTO.getEmail());
+        Optional<BatchModel> optionalBatchModel= batchRepository.findById(studentRegistrationRequestDto.getBatchId());
 
         if(hasStudent.isPresent()){
             throw new UserAlreadyExistsException("User with email "+ studentRegistrationRequestDto.getEmail() +" already exists");
         }
+
+        if(optionalBatchModel.isEmpty()){
+            throw new ResourceNotFoundException("batch with id : " + studentRegistrationRequestDto.getBatchId() + " does not exists");
+        }
+
         String password = PasswordGenerator.generateTemporaryPassword();
         String resetToken = generateResetToken();
         LocalDateTime tokenExpiry = LocalDateTime.now().plusHours(24);
@@ -59,8 +71,13 @@ public class StudentRegistrationServiceImpl implements IRegistrationService , IG
 
         studentModel = studentRepository.save(studentModel);
 
+        BatchModel batchModel = optionalBatchModel.get();
+        batchModel.getStudentId().add(studentModel.getId());
+        batchModel = batchRepository.save(batchModel);
+
         resetPasswordFirstTimeEmailService.sendResetEmail(studentModel.getEmail(),password,resetToken);
         System.out.println("Send Email");
+
 
         StudentRegistrationResponseDTO response = StudentRegistrationResponseDTO.fromEntity(studentModel);
 
