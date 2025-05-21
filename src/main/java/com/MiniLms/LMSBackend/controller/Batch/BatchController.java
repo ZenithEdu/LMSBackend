@@ -159,4 +159,9 @@ public class BatchController {
     public ResponseEntity<List<BatchInfoResponseDTO>> getAllBatches(){
         return ResponseEntity.ok(batchService.getAllBatches());
     }
+
+    @GetMapping("/{batchId}")
+    public ResponseEntity<String> getBatchNameById(String id){
+        return ResponseEntity.ok(batchService.getBatchById(id).getName());
+    }
 }

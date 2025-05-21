@@ -5,6 +5,7 @@ import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.S
 import com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS.UserRegistrationResponseDTO;
 import com.MiniLms.LMSBackend.dto.RequestDTO.RegistrationAndLoginRequestDTOS.UserRegistrationRequestDTO;
 import com.MiniLms.LMSBackend.exceptions.UserAlreadyExistsException;
+import com.MiniLms.LMSBackend.model.BatchModels.BatchModel;
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.StudentModel;
 import com.MiniLms.LMSBackend.repository.UserRepositories.IStudentRepository;
 import com.MiniLms.LMSBackend.service.emailService.IResetPasswordFirstTimeEmailService;

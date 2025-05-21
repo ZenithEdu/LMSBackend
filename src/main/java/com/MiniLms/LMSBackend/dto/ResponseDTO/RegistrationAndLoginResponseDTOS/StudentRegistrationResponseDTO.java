@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @JsonTypeName("STUDENT")
 public class StudentRegistrationResponseDTO extends UserRegistrationResponseDTO {
     private String branch;
+    private String batchName;
     private String batchId;
 
     public static StudentRegistrationResponseDTO fromEntity(StudentModel student) {
