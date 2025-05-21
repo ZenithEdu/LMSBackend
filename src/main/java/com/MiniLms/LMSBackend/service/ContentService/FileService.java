@@ -35,7 +35,7 @@ public class FileService implements IFileService{
     }
 
     @Override
-    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','STUDENT')")
+    //@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_MANAGER','ROLE_STUDENT')")
     public ResponseEntity<InputStreamResource> getFileById(String id) throws IOException {
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(id))));
 

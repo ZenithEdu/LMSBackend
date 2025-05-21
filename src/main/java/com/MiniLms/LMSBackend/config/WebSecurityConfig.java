@@ -64,7 +64,8 @@ public class WebSecurityConfig {
                         "/api/auth/reset/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/v3/api-docs/**",
+                        "/api/content/files/**"
                     ).permitAll()
                     .anyRequest().authenticated()
             )
