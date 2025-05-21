@@ -25,10 +25,18 @@ public class RegistrationController {
     }
 
     @PostMapping("/register/employee")
-    public ResponseEntity<?> registerEmployee(
+    public ResponseEntity<EmployeeRegistrationResponseDTO> registerEmployee(
         @Valid @RequestBody EmployeeRegistrationRequestDTO request) {
         IRegistrationService registrationService = registrationServiceFactory.getService(UserType.EMPLOYEE);
         EmployeeRegistrationResponseDTO response = (EmployeeRegistrationResponseDTO) registrationService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/register/student")
+    public ResponseEntity<StudentRegistrationResponseDTO> registerStudent(
+        @Valid @RequestBody StudentRegistrationRequestDTO request){
+        IRegistrationService registrationService = registrationServiceFactory.getService(UserType.STUDENT);
+        StudentRegistrationResponseDTO responseDTO = (StudentRegistrationResponseDTO) registrationService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 }
