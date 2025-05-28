@@ -1,6 +1,7 @@
 package com.MiniLms.LMSBackend.dto.ResponseDTO.RegistrationAndLoginResponseDTOS;
 
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.EmployeeModel;
+import com.MiniLms.LMSBackend.model.UserModelAndSubModels.Gender;
 import com.MiniLms.LMSBackend.model.UserModelAndSubModels.UserType;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
@@ -14,6 +15,8 @@ import java.util.List;
 @SuperBuilder
 @JsonTypeName("EMPLOYEE")
 public class EmployeeRegistrationResponseDTO extends UserRegistrationResponseDTO {
+    private String phone;
+    private Gender gender;
     private List<String> batchId;
 
     public static EmployeeRegistrationResponseDTO fromEntity(EmployeeModel employee) {

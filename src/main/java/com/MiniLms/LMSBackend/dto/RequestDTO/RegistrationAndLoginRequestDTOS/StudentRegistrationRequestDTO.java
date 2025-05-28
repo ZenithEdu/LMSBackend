@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @JsonTypeName("STUDENT")
 public class StudentRegistrationRequestDTO extends UserRegistrationRequestDTO{
+    private String uniId;
     private String batchId;
     private String branch;
 
@@ -19,9 +20,8 @@ public class StudentRegistrationRequestDTO extends UserRegistrationRequestDTO{
         return StudentModel.builder()
             .name(this.getName())
             .email(this.getEmail())
-            .phone(this.getPhone())
             .role(this.getRole())
-            .gender(this.getGender())
+            .uniId(this.getUniId())
             .batchId(this.getBatchId())
             .branch(this.getBranch())
             .build();

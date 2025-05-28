@@ -22,7 +22,7 @@ public class Resource {
 
     private ObjectId classPPT;
 
-    @URL(message = "Invalid article URL")
-    private String article;
+    @URL(message = "Invalid test URL")
+    private String test;
 
 }

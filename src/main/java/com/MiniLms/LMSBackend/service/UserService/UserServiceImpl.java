@@ -136,9 +136,7 @@ public class UserServiceImpl implements IUserService{
             .id(model.getId())
             .name(model.getName())
             .email(model.getEmail())
-            .phone(model.getPhone())
             .role(model.getRole())
-            .gender(model.getGender())
             .type(UserType.EMPLOYEE)
             .build();
     }

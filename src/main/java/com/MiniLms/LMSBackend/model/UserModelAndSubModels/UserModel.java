@@ -29,13 +29,6 @@ public class UserModel {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(
-        regexp = "^[6-9]\\d{9}$",
-        message = "Phone number must be 10 digits and start with 6, 7, 8, or 9"
-    )
-    private String phone;
-
     @NotBlank(message = "Password is mandatory")
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d).{8,}$",
         message = "Password must be at least 8 characters with at least one letter and one number")
@@ -50,7 +43,6 @@ public class UserModel {
     @NotNull(message = "Role is mandatory")
     private Role role;
 
-    @NotNull(message = "Gender is mandatory")
-    private Gender gender;
+
 
 }

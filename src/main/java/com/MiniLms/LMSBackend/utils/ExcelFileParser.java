@@ -26,11 +26,10 @@ public class ExcelFileParser {
                 if(row.getRowNum() == 0)continue;
 
                 StudentRegistrationRequestDTO student = StudentRegistrationRequestDTO.builder()
-                    .name(getCellValue(row,0,dataFormatter))
-                    .email(getCellValue(row,1,dataFormatter))
-                    .phone(getCellValue(row,2,dataFormatter))
-                    .gender(setStudentGender(getCellValue(row,3,dataFormatter)))
-                    .branch(getCellValue(row,4,dataFormatter))
+                    .uniId(getCellValue(row,0,dataFormatter))
+                    .name(getCellValue(row,1,dataFormatter))
+                    .email(getCellValue(row,2,dataFormatter))
+                    .branch(getCellValue(row,3,dataFormatter))
                     .role(Role.STUDENT)
                     .build();
 

@@ -32,7 +32,7 @@ public class TopicResponseDTO extends CommonTopicResponseDTO{
     }
     private static ResourceResponseDTO convertResourceToDto(Resource resource) {
         return ResourceResponseDTO.builder()
-            .article(resource.getArticle())
+            .test(resource.getTest())
             .video(resource.getVideo())
             .classPPTUrl(getFileUrl(resource.getClassPPT()))
             .exerciseUrl(getFileUrl(resource.getExercise()))

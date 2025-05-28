@@ -130,7 +130,7 @@ public class TopicServiceImpl implements ITopicService{
                if(requestDTO.getSolution() != null){
                    existingRes.setSolution(storeFile(requestDTO.getSolution()));
                }
-               existingRes.setArticle(requestDTO.getArticle());
+               existingRes.setTest(requestDTO.getTest());
                existingRes.setVideo(requestDTO.getVideo());
 
                existing.setResource(existingRes);
@@ -217,9 +217,8 @@ public class TopicServiceImpl implements ITopicService{
         if(resourceRequestDTO.getSolution() != null){
             resource.setSolution(storeFile(resourceRequestDTO.getSolution()));
         }
-        resource.setArticle(resourceRequestDTO.getArticle());
+        resource.setTest(resourceRequestDTO.getTest());
         resource.setVideo(resourceRequestDTO.getVideo());
-
         return resource;
     }
 

@@ -20,6 +20,6 @@ public class ResourceRequestDTO {
     @PDFFile
     private MultipartFile classPPT;
 
-    @URL(message = "Article must be a valid URL")
-    private String article;
+    @URL(message = "Test must be a valid URL")
+    private String test;
 }

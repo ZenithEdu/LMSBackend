@@ -17,5 +17,5 @@ public class ResourceResponseDTO {
     private String solutionUrl;
     private String video;
     private String classPPTUrl;
-    private String article;
+    private String test;
 }
