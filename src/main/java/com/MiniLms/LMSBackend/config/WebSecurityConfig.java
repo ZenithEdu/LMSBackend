@@ -79,7 +79,8 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
             "http://192.168.1.13:5173",
-            "http://localhost:5173"// Frontend developer's origin
+            "http://localhost:5173",
+            "https://lms-ruddy-pi.vercel.app"// Frontend developer's origin
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));

@@ -174,3 +174,5 @@ Caused by: javax.net.ssl.SSLException: Received fatal alert: internal_error
 2025-05-28T11:45:41.301+05:30  INFO 6532 --- [LMSBackend] [http-nio-8081-exec-1] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 326 ms
 2025-05-28T11:52:48.356+05:30  INFO 6532 --- [LMSBackend] [http-nio-8081-exec-1] c.M.L.controller.Batch.BatchController   : Received file - name: dummyStudentnewFormat.xlsx, size: 4875, content type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 2025-05-28T11:52:48.523+05:30  INFO 6532 --- [LMSBackend] [ForkJoinPool.commonPool-worker-8] c.M.L.s.BatchService.BatchServiceImpl    : Processing file with actual size: 4875
+2025-05-28T12:34:21.553+05:30  INFO 6532 --- [LMSBackend] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-28T12:34:21.572+05:30  INFO 6532 --- [LMSBackend] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
