@@ -80,7 +80,7 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(List.of(
             "http://192.168.1.13:5173",
             "http://localhost:5173",
-            "https://lms-ruddy-pi.vercel.app"// Frontend developer's origin
+            "https://lms-front-bkb0g9voq-zenithindias-projects.vercel.app"// Frontend developer's origin
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
