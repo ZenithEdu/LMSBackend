@@ -1,7 +1,7 @@
 package com.MiniLms.LMSBackend.service.emailService;
 
 public interface IResetPasswordFirstTimeEmailService {
-    String RESET_LINK = "http://localhost:5173/create-password"+"?token=";
+    String RESET_LINK = "https://lms-front-end-gamma.vercel.app/create-password"+"?token=";
     String SUBJECT = "Your LMS Account Credentials";
     String BODY1 = """
         Your account has been created.
