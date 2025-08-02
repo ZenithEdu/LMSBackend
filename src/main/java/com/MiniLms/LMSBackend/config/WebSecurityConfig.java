@@ -78,10 +78,9 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-            "http://192.168.1.13:5173",
+            "http://147.79.68.140:5173",
             "http://localhost:5173",
-            "https://lms-front-end-gamma.vercel.app",
-            "https://lms-front-bkb0g9voq-zenithindias-projects.vercel.app"// Frontend developer's origin
+            "https://zenlms.online"// Frontend developer's origin
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));

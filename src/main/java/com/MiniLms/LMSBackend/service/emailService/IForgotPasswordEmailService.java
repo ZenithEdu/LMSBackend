@@ -1,7 +1,7 @@
 package com.MiniLms.LMSBackend.service.emailService;
 
 public interface IForgotPasswordEmailService {
-    String RESET_LINK = "https://lms-front-end-gamma.vercel.app/reset-password" + "?token=";
+    String RESET_LINK = "https://zenlms.online/reset-password" + "?token=";
     String SUBJECT = "LMS Password Reset Request";
     String BODY1 = """
         We received a request to reset your LMS account password.
