@@ -78,8 +78,8 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-            "http://147.79.68.140:5173",
-            "http://localhost:5173",
+            "http://147.79.68.140:8080",
+            "http://localhost:8080",
             "https://zenlms.online"// Frontend developer's origin
         ));
         configuration.setAllowedMethods(List.of("*"));
